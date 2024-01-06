@@ -1,0 +1,4 @@
+name: Heretic
+version: '${version}'
+main: himcd.heresy.Heretic
+api-version: '1.20'
