@@ -1,4 +1,4 @@
 name: Heretic
 version: '${version}'
-main: himcd.heresy.Heretic
+main: himcd.heretic.Heretic
 api-version: '1.20'

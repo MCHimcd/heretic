@@ -37,6 +37,13 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
+tasks.register('copyArtifacts', Copy) {
+    from 'build/libs'
+    into "E:/mcs/plugins/"
+    include '**/*.jar'
+    rename { "Heretic.jar" }
+}
+
 processResources {
     def props = [version: version]
     inputs.properties props
