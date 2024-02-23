@@ -1,10 +1,13 @@
 package himcd.heretic.game;
 
+import himcd.heretic.menu.ChoosePowerMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import static himcd.heretic.Heretic.*;
 
@@ -28,10 +31,14 @@ public final class GameState {
         }
         time = 0;
         state = State.NONE;
+        HPlayer.players.clear();
     }
 
-    public static void prepare(Collection<Player> players) {
-        //TODO
+    public static void prepare(List<Player> players) {
+        if(players.isEmpty()) return;
+        Collections.shuffle(players);
+        players.getFirst().openInventory(new ChoosePowerMenu().getInventory());
+
     }
 
     public static void start() {
@@ -40,6 +47,6 @@ public final class GameState {
     }
 
     public enum State {
-        NONE, FIRST, SECOND
+        NONE, FIRST, SECOND,PREPARE
     }
 }

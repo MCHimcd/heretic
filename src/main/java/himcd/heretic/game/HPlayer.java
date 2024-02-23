@@ -2,14 +2,17 @@ package himcd.heretic.game;
 
 import himcd.heretic.role.Role;
 import himcd.heretic.role.power.Power;
+import himcd.heretic.role.skill.Skill;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
 
 import static himcd.heretic.Heretic.believerT;
 import static himcd.heretic.Heretic.hereticT;
 
-public record HPlayer(Player player, Role role, Power power) {
-    public HPlayer(Player player, Role role) {
-        this(player, role, null);
+public record HPlayer(Player player, Role role, Skill skill, Power power) {
+    public HPlayer(Player player, Role role, Skill skill) {
+        this(player, role, skill, null);
         believerT.addPlayer(player);
     }
 
@@ -17,5 +20,12 @@ public record HPlayer(Player player, Role role, Power power) {
         if (power != null) {
             hereticT.addPlayer(player);
         }
+        players.put(player, this);
+    }
+
+    public static HashMap<Player,HPlayer> players = new HashMap<>();
+
+    public static HPlayer getPlayer(Player player){
+        return players.get(player);
     }
 }
