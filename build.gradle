@@ -35,11 +35,12 @@ tasks.withType(JavaCompile).configureEach {
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release.set(targetJavaVersion)
     }
+    options.encoding = "UTF-8"
 }
 
 tasks.register('copyArtifacts', Copy) {
     from 'build/libs'
-    into "E:/mcs/plugins/"
+    into "D:/mcs/plugins/"
     include '**/*.jar'
     rename { "Heretic.jar" }
 }

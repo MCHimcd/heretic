@@ -42,6 +42,7 @@ public final class Heretic extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new GameListener(), this);
         Bukkit.getPluginManager().registerEvents(this, this);
         GameState.reset();
+        getLogger().info("test");
     }
 
     @Override
