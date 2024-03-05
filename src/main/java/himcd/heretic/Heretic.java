@@ -3,7 +3,6 @@ package himcd.heretic;
 import himcd.heretic.game.GameState;
 import himcd.heretic.menu.MainMenu;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -23,7 +22,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 public final class Heretic extends JavaPlugin implements Listener {
-    public static final MiniMessage msg = MiniMessage.miniMessage();
+
     public static Heretic plugin;
     public static BukkitTask tick_task;
     public static Scoreboard msb;
@@ -33,6 +32,7 @@ public final class Heretic extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        //初始化
         plugin = this;
         tick_task = tick.runTaskTimer(this, 0, 1);
         msb = Bukkit.getScoreboardManager().getMainScoreboard();
@@ -58,6 +58,7 @@ public final class Heretic extends JavaPlugin implements Listener {
         //事件
         Bukkit.getPluginManager().registerEvents(new GameListener(), this);
         Bukkit.getPluginManager().registerEvents(this, this);
+        //重置
         GameState.reset();
     }
 
@@ -78,6 +79,7 @@ public final class Heretic extends JavaPlugin implements Listener {
         }
     }
 
+    //主菜单
     @EventHandler
     void onUse(PlayerInteractEvent e) {
         if (e.getHand() == EquipmentSlot.OFF_HAND

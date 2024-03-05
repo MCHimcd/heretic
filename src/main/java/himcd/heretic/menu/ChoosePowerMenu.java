@@ -1,12 +1,10 @@
 package himcd.heretic.menu;
 
-import net.kyori.adventure.text.Component;
-
-import static himcd.heretic.Heretic.msg;
+import static himcd.heretic.util.Message.msg;
 
 public class ChoosePowerMenu extends SlotMenu{
     public ChoosePowerMenu() {
-        super(9, msg.deserialize("<gold>选择你的"));
+        super(9, msg.deserialize("<gold>选择你的力量"));
 
     }
 }
