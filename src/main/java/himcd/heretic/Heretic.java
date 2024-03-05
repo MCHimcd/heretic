@@ -2,6 +2,7 @@ package himcd.heretic;
 
 import himcd.heretic.game.GameState;
 import himcd.heretic.menu.MainMenu;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -21,6 +22,10 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import static himcd.heretic.game.GameState.State;
+import static himcd.heretic.game.GameState.state;
+
+@SuppressWarnings("SpellCheckingInspection")
 public final class Heretic extends JavaPlugin implements Listener {
 
     public static Heretic plugin;
@@ -94,8 +99,8 @@ public final class Heretic extends JavaPlugin implements Listener {
 
     @EventHandler
     void onClick(InventoryClickEvent e) {
+        if (state == State.NONE || state == State.PREPARE) e.setCancelled(true);
         if (!(e.getWhoClicked() instanceof Player p) || !(e.getInventory().getHolder() instanceof MainMenu m)) return;
         m.handleClick(e.getSlot(), p);
-        e.setCancelled(true);
     }
 }

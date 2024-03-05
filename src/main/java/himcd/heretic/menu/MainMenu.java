@@ -4,7 +4,7 @@ import himcd.heretic.util.Message;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import static himcd.heretic.Heretic.msg;
+import static himcd.heretic.Heretic.*;
 
 public class MainMenu extends SlotMenu {
     public MainMenu() {

@@ -6,11 +6,15 @@ import himcd.heretic.role.skill.Skill;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.List;
 
 import static himcd.heretic.Heretic.believerT;
 import static himcd.heretic.Heretic.hereticT;
 
+
 public record HPlayer(Player player, Role role, Skill skill, Power power) {
+    public static HashMap<Player, HPlayer> players = new HashMap<>();
+
     public HPlayer(Player player, Role role, Skill skill) {
         this(player, role, skill, null);
         believerT.addPlayer(player);
@@ -23,9 +27,11 @@ public record HPlayer(Player player, Role role, Skill skill, Power power) {
         players.put(player, this);
     }
 
-    public static HashMap<Player,HPlayer> players = new HashMap<>();
-
-    public static HPlayer getPlayer(Player player){
+    public static HPlayer getPlayer(Player player) {
         return players.get(player);
+    }
+
+    public static List<HPlayer> getPlayers() {
+        return players.values().stream().toList();
     }
 }
