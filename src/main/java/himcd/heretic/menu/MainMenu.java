@@ -17,6 +17,7 @@ public class MainMenu extends SlotMenu {
     private static final ItemStack info = EquipmentFactory.create(Material.SKELETON_SKULL).name(Message.msg.deserialize("<red>个人信息")).getItem();
     private static final ItemStack join = EquipmentFactory.create(Material.STONE).name(Message.msg.deserialize("<green>准备")).getItem();
     private static final ItemStack quit = EquipmentFactory.create(Material.STONE).name(Message.msg.deserialize("<red>取消准备")).getItem();
+    private static final ItemStack docs= EquipmentFactory.create(Material.BOOK).name(Message.msg.deserialize("<aqua>文档")).getItem();
     public static List<Player> prepared = new ArrayList<>();
     private boolean isPrepared = false;
 
@@ -32,6 +33,7 @@ public class MainMenu extends SlotMenu {
                     ));
                 });
         //准备
+        isPrepared = prepared.contains(player);
         BiConsumer<ItemStack, Player> f = (i, p) -> {
             if (isPrepared) {
                 //已准备
@@ -41,10 +43,11 @@ public class MainMenu extends SlotMenu {
                 //未准备
                 prepared.add(p);
                 getInventory().setItem(1, quit);
+                //todo 倒计时开始
             }
             isPrepared = !isPrepared;
         };
-        if (prepared.contains(player)) setSlot(1, quit, f);
-        else setSlot(1, join, f);
+        setSlot(1, isPrepared ? quit : join, f);
+        //todo 文档
     }
 }
