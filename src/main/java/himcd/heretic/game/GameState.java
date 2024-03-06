@@ -1,6 +1,6 @@
 package himcd.heretic.game;
 
-import himcd.heretic.menu.ChoosePowerMenu;
+import himcd.heretic.menu.MainMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -31,12 +31,13 @@ public final class GameState {
         time = 0;
         state = State.NONE;
         HPlayer.players.clear();
+        MainMenu.prepared.clear();
     }
 
     public static void prepare(List<Player> players) {
         if(players.isEmpty()) return;
         Collections.shuffle(players);
-        players.getFirst().openInventory(new ChoosePowerMenu().getInventory());
+//        players.getFirst().openInventory(new ChoosePowerMenu().getInventory());
 
     }
 

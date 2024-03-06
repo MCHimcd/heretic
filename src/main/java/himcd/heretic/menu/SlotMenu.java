@@ -15,10 +15,12 @@ import static himcd.heretic.Heretic.plugin;
 
 public abstract class SlotMenu implements InventoryHolder {
     private final Inventory inventory;
+    private final Player player;
     private final HashMap<Integer, BiConsumer<ItemStack,Player>> slotFunctions = new HashMap<>();
 
-    public SlotMenu(int size, Component title) {
+    public SlotMenu(int size, Component title,Player p) {
         inventory = plugin.getServer().createInventory(this, size, title);
+        player=p;
     }
 
     public void setSlot(int slot, ItemStack item, BiConsumer<ItemStack,Player> function) {
@@ -31,9 +33,9 @@ public abstract class SlotMenu implements InventoryHolder {
         slotFunctions.remove(slot);
     }
 
-    public void handleClick(int slot, Player p) {
+    public void handleClick(int slot) {
         if (slotFunctions.containsKey(slot)) {
-            slotFunctions.get(slot).accept(inventory.getItem(slot),p);
+            slotFunctions.get(slot).accept(inventory.getItem(slot), player);
         }
     }
 

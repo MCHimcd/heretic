@@ -94,13 +94,13 @@ public final class Heretic extends JavaPlugin implements Listener {
         var item = e.getItem();
         if (item == null || item.getType() != Material.CLOCK) return;
         var p = e.getPlayer();
-        p.openInventory(new MainMenu().getInventory());
+        p.openInventory(new MainMenu(p).getInventory());
     }
 
     @EventHandler
     void onClick(InventoryClickEvent e) {
         if (state == State.NONE || state == State.PREPARE) e.setCancelled(true);
         if (!(e.getWhoClicked() instanceof Player p) || !(e.getInventory().getHolder() instanceof MainMenu m)) return;
-        m.handleClick(e.getSlot(), p);
+        m.handleClick(e.getSlot());
     }
 }
