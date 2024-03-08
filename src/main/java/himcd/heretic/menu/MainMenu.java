@@ -1,7 +1,9 @@
 package himcd.heretic.menu;
 
+import himcd.heretic.TickRunner;
 import himcd.heretic.util.EquipmentFactory;
 import himcd.heretic.util.Message;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -43,6 +45,8 @@ public class MainMenu extends SlotMenu {
                 //未准备
                 prepared.add(p);
                 getInventory().setItem(1, quit);
+                if(prepared.size()== Bukkit.getOnlinePlayers().size()) TickRunner.prepareTime=200;
+                else TickRunner.prepareTime=1200;
                 //todo 倒计时开始
             }
             isPrepared = !isPrepared;
