@@ -1,20 +1,25 @@
 package himcd.heretic;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import static himcd.heretic.Heretic.plugin;
+import static himcd.heretic.util.Message.msg;
 
 public final class GameListener implements Listener {
     @EventHandler
@@ -27,30 +32,36 @@ public final class GameListener implements Listener {
         var id = item.getItemMeta().getCustomModelData();
         switch (id) {
             case 1000000 -> {
+                // TODO: 3/8/2024    //清理使用的道具
                 Boolean Sneaking;
                 Vector normalize = p.getLocation().getDirection().normalize();
                 if (p.isSneaking()){
                     Sneaking=Boolean.TRUE;
-                    normalize.multiply(1);
+                    normalize.multiply(1).setY(0.1);
                 }else {
                     Sneaking=Boolean.FALSE;
-                    normalize.multiply(1.6);
+                    normalize.multiply(2);
                 }
                 Location location = p.getEyeLocation();
-                ArmorStand entity = (ArmorStand) p.getWorld().spawnEntity(location.clone().add(0,-1,0), EntityType.ARMOR_STAND);
-                entity.getEquipment().setHelmet(new ItemStack(Material.IRON_BLOCK));
-                armorstand(entity);
+                Item item1 = (Item) p.getWorld().spawnEntity(location,EntityType.DROPPED_ITEM);
+                item1.setItemStack(new ItemStack(Material.IRON_BLOCK));
+                item(item1,p);
+                item1.setVelocity(normalize);
                     new BukkitRunnable() {
                         int t = 0;
                         @Override
                         public void run() {
-                            if (t >= 20) {
-                                p.getWorld().spawnParticle(Particle.FLAME, location, 100, 0, 0, 0, 0.1, null, true);
-                                location.getNearbyPlayers(3, player -> !player.equals(p)&&player.getGameMode()== GameMode.ADVENTURE)
+                            Location location1 = item1.getLocation();
+                            if (t >= 10) {
+                                p.getWorld().spawnParticle(Particle.EXPLOSION_LARGE,location1,10,1,1,1,null);
+                                p.getWorld().spawnParticle(Particle.SMOKE_NORMAL, location1, 500, 0.5, 0.5, 0.5, 0.1, null, true);
+                                location1.getNearbyPlayers(3, player -> !player.equals(p)&&player.getGameMode()== GameMode.ADVENTURE)
                                         .forEach(player -> {
-                                            p.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 2f, 1f);
-                                            player.setVelocity(AtoB(player.getLocation(),location).setY(0.5));
+                                            player.setVelocity(AtoB(location1,player.getLocation()).setY(0.5));
+                                            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,30,1,true));
+                                            player.damage(3,p);
                                         });
+                                p.getWorld().playSound(location1, Sound.ENTITY_GENERIC_EXPLODE, .5f, 3f);
                                 new BukkitRunnable() {
                                     double radius = 3;
                                     final int maxR = 0;
@@ -61,32 +72,23 @@ public final class GameListener implements Listener {
                                             return;
                                         }
                                         for (double theta = 0; theta < Math.PI * 2; theta += Math.PI / 180) {
-                                            double x = location.getX() + radius * Math.cos(theta);
-                                            double z = location.getZ() + radius * Math.sin(theta);
-                                            Location particleLocation = new Location(p.getWorld(), x, location.getY(), z);
-
+                                            double x = location1.getX() + radius * Math.cos(theta);
+                                            double z = location1.getZ() + radius * Math.sin(theta);
+                                            Location particleLocation = new Location(p.getWorld(), x, location1.getY(), z);
                                             p.getWorld().spawnParticle(Particle.REDSTONE, particleLocation, 1,
                                                     0, 0, 0, 0, new Particle.DustOptions(Color.AQUA, 1f));
                                         }
                                         radius -= 0.6;
                                     }
                                 }.runTaskTimer(plugin, 0, 1);
-                                entity.remove();
+                                item1.remove();
                                 cancel();
                             }else {
-                                entity.teleport(location.clone().add(0,-1,0));
                                 t++;
-                                location.add(normalize);
-                                if (Sneaking){
-                                    location.add(0,-0.2*t,0);
-                                }else {
-                                    location.add(0,-0.1*t,0);
-                                }
-                                p.getWorld().spawnParticle(Particle.FLAME, location, 1, 0, 0, 0, 0, null, true);
+                                item1.customName(msg.deserialize("<gold> %s".formatted(t)));
+                                item1.setCustomNameVisible(true);
+                                p.getWorld().spawnParticle(Particle.FLAME, location1, 5, 0.1, 0.1, 0.1, 0.05, null, true);
                             }
-                            if (location.getBlock().getType() != Material.AIR){
-                                t=20;
-                            };
                         }
                     }.runTaskTimer(plugin, 0, 1);
             }
@@ -99,6 +101,12 @@ public final class GameListener implements Listener {
         entity.setMarker(true);
         entity.setSmall(true);
         entity.setHeadPose(EulerAngle.ZERO.setY(-90));
+    }
+    public void item(Item item,Player player){
+        item.setCanMobPickup(false);
+        item.setThrower(player.getUniqueId());
+        item.setOwner(player.getUniqueId());
+        item.setCanPlayerPickup(false);
     }
     public Vector AtoB(Location A , Location B){
         return B.clone().subtract(A).toVector().normalize();
