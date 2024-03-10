@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -102,5 +103,10 @@ public final class Heretic extends JavaPlugin implements Listener {
         if (state == State.NONE || state == State.PREPARE) e.setCancelled(true);
         if (!(e.getWhoClicked() instanceof Player p) || !(e.getInventory().getHolder() instanceof MainMenu m)) return;
         m.handleClick(e.getSlot());
+    }
+
+    @EventHandler
+    void onClose(InventoryCloseEvent e){
+        //todo 防止关闭选择菜单
     }
 }

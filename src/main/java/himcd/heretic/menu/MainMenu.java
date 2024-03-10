@@ -1,7 +1,7 @@
 package himcd.heretic.menu;
 
 import himcd.heretic.TickRunner;
-import himcd.heretic.util.EquipmentFactory;
+import himcd.heretic.util.ItemCreator;
 import himcd.heretic.util.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,10 +16,10 @@ import static himcd.heretic.Heretic.Bwins;
 import static himcd.heretic.Heretic.Hwins;
 
 public class MainMenu extends SlotMenu {
-    private static final ItemStack info = EquipmentFactory.create(Material.SKELETON_SKULL).name(Message.msg.deserialize("<red>个人信息")).getItem();
-    private static final ItemStack join = EquipmentFactory.create(Material.STONE).name(Message.msg.deserialize("<green>准备")).getItem();
-    private static final ItemStack quit = EquipmentFactory.create(Material.STONE).name(Message.msg.deserialize("<red>取消准备")).getItem();
-    private static final ItemStack docs= EquipmentFactory.create(Material.BOOK).name(Message.msg.deserialize("<aqua>文档")).getItem();
+    private static final ItemStack info = ItemCreator.create(Material.SKELETON_SKULL).name(Message.msg.deserialize("<red>个人信息")).getItem();
+    private static final ItemStack join = ItemCreator.create(Material.STONE).name(Message.msg.deserialize("<green>准备")).getItem();
+    private static final ItemStack quit = ItemCreator.create(Material.STONE).name(Message.msg.deserialize("<red>取消准备")).getItem();
+    private static final ItemStack docs= ItemCreator.create(Material.BOOK).name(Message.msg.deserialize("<aqua>文档")).getItem();
     public static List<Player> prepared = new ArrayList<>();
     private boolean isPrepared = false;
 
@@ -47,7 +47,6 @@ public class MainMenu extends SlotMenu {
                 getInventory().setItem(1, quit);
                 if(prepared.size()== Bukkit.getOnlinePlayers().size()) TickRunner.prepareTime=200;
                 else TickRunner.prepareTime=1200;
-                //todo 倒计时开始
             }
             isPrepared = !isPrepared;
         };

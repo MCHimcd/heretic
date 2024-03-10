@@ -8,17 +8,17 @@ import static himcd.heretic.game.GameState.*;
 public final class GameRunner extends BukkitRunnable {
     @Override
     public void run() {
-        time++;
+        gameTime++;
         switch (state) {
             // 游戏逻辑
             case FIRST -> {
-                var h = heretic.player();
+                var h = HPlayer.heretic.player();
                 var ps = h.getWorld().getNearbyPlayers(h.getLocation(), 5)
                         .stream().filter(p -> believerT.hasEntity(p)).toList();
-                heretic.power().getBuff1().accept(heretic, ps);
+                HPlayer.heretic.power().getBuff1().accept(HPlayer.heretic, ps);
             }
             case SECOND -> {
-                heretic.power().getBuff2().accept(heretic);
+                HPlayer.heretic.power().getBuff2().accept(HPlayer.heretic);
             }
         }
     }

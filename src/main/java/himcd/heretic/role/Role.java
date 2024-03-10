@@ -1,14 +1,19 @@
 package himcd.heretic.role;
 
-import himcd.heretic.game.HPlayer;
 import org.bukkit.entity.Player;
-
-import java.util.function.Consumer;
 
 public abstract class Role {
     protected final Player p;
+
     public Role(Player pl) {
         p = pl;
+    }
+
+    public static Role of(Player pl, String name) {
+        return switch (name) {
+            case "Peter" -> new Peter(pl);
+            default -> null;
+        };
     }
 
     //物品、装备

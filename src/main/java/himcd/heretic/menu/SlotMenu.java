@@ -15,7 +15,7 @@ import static himcd.heretic.Heretic.plugin;
 
 public abstract class SlotMenu implements InventoryHolder {
     private final Inventory inventory;
-    private final Player player;
+    protected final Player player;
     private final HashMap<Integer, BiConsumer<ItemStack,Player>> slotFunctions = new HashMap<>();
 
     public SlotMenu(int size, Component title,Player p) {

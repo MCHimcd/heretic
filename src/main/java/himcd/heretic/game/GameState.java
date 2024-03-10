@@ -1,22 +1,21 @@
 package himcd.heretic.game;
 
-import himcd.heretic.menu.MainMenu;
+import himcd.heretic.menu.ChoosePowerMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import static himcd.heretic.Heretic.*;
+import static himcd.heretic.TickRunner.*;
+import static himcd.heretic.game.HPlayer.*;
+import static himcd.heretic.menu.MainMenu.prepared;
 
 public final class GameState {
-    public static final ArrayList<HPlayer> believers = new ArrayList<>();
     private static final GameRunner gr = new GameRunner();
     public static State state = State.NONE;
-    public static int time = 0;
+    public static int gameTime = 0;
     public static BukkitTask game_task;
-    public static HPlayer heretic;
 
     public static void reset() {
         heretic = null;
@@ -28,25 +27,34 @@ public final class GameState {
                 game_task.cancel();
             }
         }
-        time = 0;
+        gameTime = 0;
+        prepareTime = -1;
+        chooseTime = -1;
         state = State.NONE;
-        HPlayer.players.clear();
-        MainMenu.prepared.clear();
+        players.clear();
+        prepared.clear();
+        chooseMenu = null;
     }
 
-    public static void prepare(List<Player> players) {
-        if(players.isEmpty()) return;
-        Collections.shuffle(players);
-//        players.getFirst().openInventory(new ChoosePowerMenu().getInventory());
-
+    public static void prepare() {
+        //选power
+        Collections.shuffle(prepared);
+        var h = prepared.removeFirst();
+        h.openInventory(new ChoosePowerMenu(h).getInventory());
     }
 
-    public static void start() {
+    public static void start(Player h, int power) {
+        //玩家
+        heretic = new HPlayer(h, player_info.get(h), power);
+        believers.addAll(prepared.stream()
+                .map(player -> new HPlayer(player, player_info.get(player))).toList());
+        //变量
+        chooseMenu = null;
         game_task = gr.runTaskTimer(plugin, 0, 1);
         state = State.FIRST;
     }
 
     public enum State {
-        NONE, FIRST, SECOND,PREPARE
+        NONE, FIRST, SECOND, PREPARE
     }
 }
