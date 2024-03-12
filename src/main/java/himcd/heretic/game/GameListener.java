@@ -1,4 +1,4 @@
-package himcd.heretic;
+package himcd.heretic.game;
 
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
@@ -30,6 +30,7 @@ public final class GameListener implements Listener {
         var id = item.getItemMeta().getCustomModelData();
         switch (id) {
             case 1000000 -> {
+                item.setAmount(item.getAmount()-1);
                 // TODO: 3/8/2024    //清理使用的道具
                 Vector normalize = p.getLocation().getDirection().normalize();
                 if (p.isSneaking()){

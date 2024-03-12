@@ -1,5 +1,6 @@
 package himcd.heretic;
 
+import himcd.heretic.game.GameListener;
 import himcd.heretic.game.GameState;
 import himcd.heretic.menu.ChoosePowerMenu;
 import himcd.heretic.menu.MainMenu;
