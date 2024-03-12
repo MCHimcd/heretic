@@ -7,7 +7,8 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.Collections;
 
 import static himcd.heretic.Heretic.*;
-import static himcd.heretic.TickRunner.*;
+import static himcd.heretic.TickRunner.chooseMenu;
+import static himcd.heretic.TickRunner.prepareTime;
 import static himcd.heretic.game.HPlayer.*;
 import static himcd.heretic.menu.MainMenu.prepared;
 
@@ -29,7 +30,6 @@ public final class GameState {
         }
         gameTime = 0;
         prepareTime = -1;
-        chooseTime = -1;
         state = State.NONE;
         players.clear();
         prepared.clear();
@@ -41,6 +41,7 @@ public final class GameState {
         Collections.shuffle(prepared);
         var h = prepared.removeFirst();
         h.openInventory(new ChoosePowerMenu(h).getInventory());
+        state = State.PREPARE;
     }
 
     public static void start(Player h, int power) {

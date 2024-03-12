@@ -1,6 +1,5 @@
 package himcd.heretic;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
@@ -16,7 +15,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 
 import static himcd.heretic.Heretic.plugin;
 import static himcd.heretic.util.Message.msg;
@@ -33,13 +31,10 @@ public final class GameListener implements Listener {
         switch (id) {
             case 1000000 -> {
                 // TODO: 3/8/2024    //清理使用的道具
-                Boolean Sneaking;
                 Vector normalize = p.getLocation().getDirection().normalize();
                 if (p.isSneaking()){
-                    Sneaking=Boolean.TRUE;
                     normalize.multiply(1).setY(0.1);
                 }else {
-                    Sneaking=Boolean.FALSE;
                     normalize.multiply(2);
                 }
                 Location location = p.getEyeLocation();
@@ -94,7 +89,7 @@ public final class GameListener implements Listener {
             }
         }
     }
-    public void armorstand(ArmorStand entity){
+    public void armor_stand(ArmorStand entity){
         entity.setCustomNameVisible(false);
         entity.setSilent(true);
         entity.setVisible(false);

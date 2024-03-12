@@ -1,6 +1,7 @@
 package himcd.heretic;
 
 import himcd.heretic.game.GameState;
+import himcd.heretic.menu.ChoosePowerMenu;
 import himcd.heretic.menu.MainMenu;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -106,7 +107,11 @@ public final class Heretic extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    void onClose(InventoryCloseEvent e){
-        //todo 防止关闭选择菜单
+    void onClose(InventoryCloseEvent e) {
+        if (state != State.PREPARE) return;
+        //防止关闭选择菜单
+        if (e.getInventory().getHolder() instanceof ChoosePowerMenu m) {
+            e.getPlayer().openInventory(m.getInventory());
+        }
     }
 }
