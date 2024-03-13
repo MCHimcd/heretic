@@ -1,6 +1,7 @@
 package himcd.heretic.game;
 
 import himcd.heretic.menu.ChoosePowerMenu;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -23,10 +24,8 @@ public final class GameState {
         believers.clear();
         hereticT.removeEntries(hereticT.getEntries());
         believerT.removeEntries(believerT.getEntries());
-        if (game_task != null) {
-            if (!game_task.isCancelled()) {
-                game_task.cancel();
-            }
+        if (game_task != null&&!game_task.isCancelled()) {
+            game_task.cancel();
         }
         gameTime = 0;
         prepareTime = -1;
@@ -45,10 +44,15 @@ public final class GameState {
     }
 
     public static void start(Player h, int power) {
-        //玩家
+        //玩家队伍
         heretic = new HPlayer(h, player_info.get(h), power);
         believers.addAll(prepared.stream()
                 .map(player -> new HPlayer(player, player_info.get(player))).toList());
+        //随机传送
+        prepared.forEach(p->p.addScoreboardTag("spread"));
+        var s=Bukkit.getServer();
+        s.dispatchCommand(s.getConsoleSender(),"spreadplayers 128 128 100 128 false @a[tag=spread]");
+        prepared.forEach(p->p.removeScoreboardTag("spread"));
         //变量
         chooseMenu = null;
         game_task = gr.runTaskTimer(plugin, 0, 1);
