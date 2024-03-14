@@ -3,7 +3,9 @@ package himcd.heretic.menu;
 import himcd.heretic.TickRunner;
 import himcd.heretic.util.ItemCreator;
 import himcd.heretic.util.Message;
+import net.kyori.adventure.inventory.Book;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -46,16 +48,23 @@ public class MainMenu extends SlotMenu {
                     //未准备
                     prepared.add(p);
                     getInventory().setItem(1, quit);
-                    if (prepared.size() == Bukkit.getOnlinePlayers().size()) TickRunner.prepareTime = 200;
+                    if (prepared.size() == Bukkit.getOnlinePlayers().stream().filter(pl -> pl.getGameMode() == GameMode.ADVENTURE).count())
+                        TickRunner.prepareTime = 200;
                     else TickRunner.prepareTime = 1200;
                 }
                 isPrepared = !isPrepared;
             };
             setSlot(1, isPrepared ? quit : join, f);
         } else
-            setSlot(1, ItemCreator.create(Material.BARRIER).name(Message.msg.deserialize("<dark_red>游戏已开始")).getItem(), (i, p) -> {});
-        setSlot(2,docs,(i,p)->{
-            //todo 文档
+            setSlot(1, ItemCreator.create(Material.BARRIER).name(Message.msg.deserialize("<dark_red>游戏已开始")).getItem(), (i, p) -> {
+            });
+        setSlot(2, docs, (i, p) -> {
+            p.setGameMode(GameMode.SPECTATOR);
+            p.addScoreboardTag("docs");
+            p.openBook(Book.builder().pages(Message.convertMsg(List.of(
+                    "test",
+                    "test2"
+            ))).build());
         });
     }
 }

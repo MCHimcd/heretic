@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -85,6 +86,7 @@ public final class Heretic extends JavaPlugin implements Listener {
         if (team != null) {
             team.removeEntity(p);
         }
+        p.removeScoreboardTag("docs");
     }
 
     //主菜单
@@ -113,6 +115,17 @@ public final class Heretic extends JavaPlugin implements Listener {
         //防止关闭选择菜单
         if (e.getInventory().getHolder() instanceof ChoosePowerMenu m) {
             e.getPlayer().openInventory(m.getInventory());
+        }
+    }
+
+    @EventHandler
+    void onMove(PlayerMoveEvent e){
+        var p=e.getPlayer();
+        //文档
+        if (p.getScoreboardTags().contains("docs")) {
+            p.setGameMode(GameMode.ADVENTURE);
+            p.removeScoreboardTag("docs");
+            e.setCancelled(true);
         }
     }
 }
