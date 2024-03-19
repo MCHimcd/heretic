@@ -2,10 +2,14 @@ package himcd.heretic.game;
 
 import himcd.heretic.menu.ChoosePowerMenu;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 import static himcd.heretic.Heretic.*;
 import static himcd.heretic.TickRunner.chooseMenu;
@@ -18,6 +22,7 @@ public final class GameState {
     public static State state = State.NONE;
     public static int gameTime = 0;
     public static BukkitTask game_task;
+    public static final List<Location> portal_frame=new ArrayList<>();
 
     public static void reset() {
         heretic = null;
@@ -32,6 +37,7 @@ public final class GameState {
         state = State.NONE;
         players.clear();
         prepared.clear();
+        portal_frame.clear();
         chooseMenu = null;
     }
 
@@ -57,6 +63,12 @@ public final class GameState {
         chooseMenu = null;
         game_task = gr.runTaskTimer(plugin, 0, 1);
         state = State.FIRST;
+        var r=new Random();
+        for (int i = 0; i < 5; i++) {
+            var x=r.nextInt(256);
+            var z=r.nextInt(256);
+            portal_frame.add(new Location(h.getWorld(),x,0,z));
+        }
     }
 
     public enum State {

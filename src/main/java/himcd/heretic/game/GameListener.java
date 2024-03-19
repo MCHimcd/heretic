@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -18,8 +19,20 @@ import org.bukkit.util.Vector;
 
 import static himcd.heretic.Heretic.plugin;
 import static himcd.heretic.util.Message.msg;
+import static himcd.heretic.game.GameState.*;
 
 public final class GameListener implements Listener {
+    @EventHandler
+    void onPlace(BlockPlaceEvent e){
+        var b=e.getBlockPlaced();
+        if (b.getType()!=Material.END_PORTAL_FRAME) return;
+        var opf=portal_frame.stream().filter(l->l.getBlockX()==b.getX()&&l.getBlockZ()==b.getZ()).findAny();
+        if(opf.isEmpty()) return;
+        portal_frame.remove(opf.get());
+        if(portal_frame.isEmpty()){
+            //todo 进入二阶段
+        }
+    }
     @EventHandler
     void onUse(PlayerInteractEvent e) {
         Player p = e.getPlayer();
@@ -31,7 +44,6 @@ public final class GameListener implements Listener {
         switch (id) {
             case 1000000 -> {
                 item.setAmount(item.getAmount()-1);
-                // TODO: 3/8/2024    //清理使用的道具
                 Vector normalize = p.getLocation().getDirection().normalize();
                 if (p.isSneaking()){
                     normalize.multiply(1).setY(0.1);
