@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -20,6 +21,7 @@ import org.bukkit.util.Vector;
 
 import static himcd.heretic.Heretic.*;
 import static himcd.heretic.game.GameState.*;
+import static himcd.heretic.game.HPlayer.heretic;
 import static himcd.heretic.util.Message.msg;
 
 public final class GameListener implements Listener {
@@ -48,15 +50,28 @@ public final class GameListener implements Listener {
         }
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @EventHandler
-    void onDeath(PlayerDeathEvent e) {
-        var p = e.getPlayer();
-        if (hereticT.hasPlayer(p)) {
-            //todo 游戏结束
-        } else if (believerT.hasPlayer(p)) {
-            believerT.removePlayer(p);
+    void onDeath(EntityDamageByEntityEvent e) {
+        if(!(e.getEntity() instanceof Player hurt)) return;
+        var damage=e.getFinalDamage();
+
+        //结束判定
+        if(damage<hurt.getHealth()) return;
+        e.setCancelled(true);
+        if (hereticT.hasPlayer(hurt)) {
+            Player winner=null;
+            var cause=e.getDamageSource().getCausingEntity();
+            if(cause instanceof Player ) winner= (Player) cause;
+            else {
+                //todo
+//                cause.getPersistentDataContainer().get()
+            }
+            endGame(winner);
+        } else if (believerT.hasPlayer(hurt)) {
+            believerT.removePlayer(hurt);
             if (believerT.getSize() == 0) {
-                //todo 游戏结束
+                endGame(heretic.player());
             }
         }
         e.setCancelled(true);
