@@ -87,6 +87,7 @@ public final class GameListener implements Listener {
         var id = item.getItemMeta().getCustomModelData();
         switch (id) {
             case 1000000 -> {
+                e.setCancelled(true);
                 item.setAmount(item.getAmount() - 1);
                 Vector normalize = p.getLocation().getDirection().normalize();
                 if (p.isSneaking()) {
@@ -101,7 +102,6 @@ public final class GameListener implements Listener {
                 item1.setVelocity(normalize);
                 new BukkitRunnable() {
                     int t = 0;
-
                     @Override
                     public void run() {
                         Location location1 = item1.getLocation();
@@ -118,7 +118,6 @@ public final class GameListener implements Listener {
                             new BukkitRunnable() {
                                 final int maxR = 0;
                                 double radius = 3;
-
                                 @Override
                                 public void run() {
                                     if (radius < maxR) {

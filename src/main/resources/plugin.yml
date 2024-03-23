@@ -2,3 +2,8 @@ name: Heretic
 version: '${version}'
 main: himcd.heretic.Heretic
 api-version: '1.20'
+
+commands:
+  get:
+    usage: /<command> "Id" "Amount"
+    description: "获取物品"

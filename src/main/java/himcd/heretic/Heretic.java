@@ -26,6 +26,8 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.util.Objects;
+
 import static himcd.heretic.game.GameState.State;
 import static himcd.heretic.game.GameState.state;
 
@@ -45,6 +47,11 @@ public final class Heretic extends JavaPlugin implements Listener {
         plugin = this;
         tick_task = tick.runTaskTimer(this, 0, 1);
         msb = Bukkit.getScoreboardManager().getMainScoreboard();
+        try {
+            Objects.requireNonNull(Bukkit.getPluginCommand("get")).setExecutor(new get());
+        }catch (NullPointerException e) {
+            getLogger().warning(e.getMessage());
+        }
         //队伍
         hereticT = msb.getTeam("heretic");
         if (hereticT == null) {
