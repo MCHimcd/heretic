@@ -21,7 +21,7 @@ public class get implements CommandExecutor {
                 p.getInventory().addItem(ItemFactory.S1);
             }
         }
-        /// TODO: 3/23/2024   制作Factory直接对应数字 
+        /// TODO: 3/23/2024   制作Factory直接对应数字
         return true;
     }
 }
