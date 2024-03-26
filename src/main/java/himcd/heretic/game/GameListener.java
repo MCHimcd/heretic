@@ -47,7 +47,8 @@ public final class GameListener implements Listener {
         portal_frame.remove(opf.get());
         if (portal_frame.isEmpty()) {
             state = State.SECOND;
-            Bukkit.broadcast(msg.deserialize("<gold>[test]<white>二阶段"));
+
+            //todo 进入二阶段
         }
     }
 
@@ -89,7 +90,7 @@ public final class GameListener implements Listener {
 
     @EventHandler
     void onUse(PlayerInteractEvent e) {
-        Player p = e.getPlayer();
+        Player user = e.getPlayer();
         if (e.getAction() == Action.LEFT_CLICK_AIR
                 || e.getAction() == Action.LEFT_CLICK_BLOCK) return;
         var item = e.getItem();
@@ -100,16 +101,16 @@ public final class GameListener implements Listener {
                 //引力手雷
                 e.setCancelled(true);
                 item.setAmount(item.getAmount() - 1);
-                Vector normalize = p.getLocation().getDirection().normalize();
-                if (p.isSneaking()) {
+                Vector normalize = user.getLocation().getDirection().normalize();
+                if (user.isSneaking()) {
                     normalize.multiply(1).setY(0.1);
                 } else {
                     normalize.multiply(2);
                 }
-                Location location = p.getEyeLocation();
-                Item item1 = (Item) p.getWorld().spawnEntity(location, EntityType.DROPPED_ITEM);
+                Location location = user.getEyeLocation();
+                Item item1 = (Item) user.getWorld().spawnEntity(location, EntityType.DROPPED_ITEM);
                 item1.setItemStack(new ItemStack(Material.IRON_BLOCK));
-                item(item1, p);
+                item(item1, user);
                 item1.setVelocity(normalize);
                 new BukkitRunnable() {
                     int t = 0;
@@ -118,15 +119,15 @@ public final class GameListener implements Listener {
                     public void run() {
                         Location location1 = item1.getLocation();
                         if (t >= 10) {
-                            p.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, location1, 10, 1, 1, 1, null);
-                            p.getWorld().spawnParticle(Particle.SMOKE_NORMAL, location1, 500, 0.5, 0.5, 0.5, 0.1, null, true);
-                            location1.getNearbyPlayers(3, player -> !player.equals(p) && player.getGameMode() == GameMode.ADVENTURE)
+                            user.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, location1, 10, 1, 1, 1, null);
+                            user.getWorld().spawnParticle(Particle.SMOKE_NORMAL, location1, 500, 0.5, 0.5, 0.5, 0.1, null, true);
+                            location1.getNearbyPlayers(3, player -> !player.equals(user) && player.getGameMode() == GameMode.ADVENTURE)
                                     .forEach(player -> {
                                         player.setVelocity(AtoB(location1, player.getLocation()).setY(0.5));
                                         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 1, true));
-                                        player.damage(3, player);
+                                        player.damage(3, user);
                                     });
-                            p.getWorld().playSound(location1, Sound.ENTITY_GENERIC_EXPLODE, .5f, 3f);
+                            user.getWorld().playSound(location1, Sound.ENTITY_GENERIC_EXPLODE, .5f, 3f);
                             new BukkitRunnable() {
                                 final int maxR = 0;
                                 double radius = 3;
@@ -140,8 +141,8 @@ public final class GameListener implements Listener {
                                     for (double theta = 0; theta < Math.PI * 2; theta += Math.PI / 180) {
                                         double x = location1.getX() + radius * Math.cos(theta);
                                         double z = location1.getZ() + radius * Math.sin(theta);
-                                        Location particleLocation = new Location(p.getWorld(), x, location1.getY(), z);
-                                        p.getWorld().spawnParticle(Particle.REDSTONE, particleLocation, 1,
+                                        Location particleLocation = new Location(user.getWorld(), x, location1.getY(), z);
+                                        user.getWorld().spawnParticle(Particle.REDSTONE, particleLocation, 1,
                                                 0, 0, 0, 0, new Particle.DustOptions(Color.AQUA, 1f));
                                     }
                                     radius -= 0.6;
@@ -153,53 +154,52 @@ public final class GameListener implements Listener {
                             t++;
                             item1.customName(msg.deserialize("<gold> %s".formatted(t)));
                             item1.setCustomNameVisible(true);
-                            p.getWorld().spawnParticle(Particle.FLAME, location1, 5, 0.1, 0.1, 0.1, 0.05, null, true);
+                            user.getWorld().spawnParticle(Particle.FLAME, location1, 5, 0.1, 0.1, 0.1, 0.05, null, true);
                         }
                     }
                 }.runTaskTimer(plugin, 0, 1);
             }
-            case 2000000->{
+            case 2000000 -> {
                 //破片手雷
                 e.setCancelled(true);
                 item.setAmount(item.getAmount() - 1);
-                Vector normalize = p.getLocation().getDirection().normalize();
-                if (p.isSneaking()) {
+                Vector normalize = user.getLocation().getDirection().normalize();
+                if (user.isSneaking()) {
                     normalize.multiply(1).setY(0.5);
                 } else {
                     normalize.multiply(2);
                 }
-                Location location = p.getEyeLocation();
-                Item item1 = (Item) p.getWorld().spawnEntity(location, EntityType.DROPPED_ITEM);
+                Location location = user.getEyeLocation();
+                Item item1 = (Item) user.getWorld().spawnEntity(location, EntityType.DROPPED_ITEM);
                 item1.setItemStack(new ItemStack(Material.IRON_INGOT));
-                item(item1, p);
+                item(item1, user);
                 item1.setVelocity(normalize);
                 new BukkitRunnable() {
                     int t = 0;
+
                     @Override
                     public void run() {
                         Location location1 = item1.getLocation();
                         if (t >= 40) {
-                            p.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, location1, 10, 1, 1, 1, null);
-                            p.getWorld().spawnParticle(Particle.SMOKE_NORMAL, location1, 500, 0.5, 0.5, 0.5, 0.1, null, true);
-                            location1.getNearbyPlayers(3, player -> !player.equals(p) && player.getGameMode() == GameMode.ADVENTURE)
-                                    .forEach(player -> {
-                                        player.damage(3, player);
-                                    });
-                            popian(location1.clone(),p);
-                            popian(location1.clone(),p);
-                            popian(location1.clone(),p);
-                            popian(location1.clone(),p);
-                            popian(location1.clone(),p);
+                            user.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, location1, 10, 1, 1, 1, null);
+                            user.getWorld().spawnParticle(Particle.SMOKE_NORMAL, location1, 500, 0.5, 0.5, 0.5, 0.1, null, true);
+                            location1.getNearbyPlayers(3, player -> !player.equals(user) && player.getGameMode() == GameMode.ADVENTURE)
+                                    .forEach(player -> player.damage(3, user));
+                            popian(location1.clone(), user);
+                            popian(location1.clone(), user);
+                            popian(location1.clone(), user);
+                            popian(location1.clone(), user);
+                            popian(location1.clone(), user);
 
 
-                            p.getWorld().playSound(location1, Sound.ENTITY_GENERIC_EXPLODE, .5f, 3f);
+                            user.getWorld().playSound(location1, Sound.ENTITY_GENERIC_EXPLODE, .5f, 3f);
                             item1.remove();
                             cancel();
                         } else {
                             t++;
                             item1.customName(msg.deserialize("<gold> %s".formatted(t)));
                             item1.setCustomNameVisible(true);
-                            p.getWorld().spawnParticle(Particle.CRIT, location1, t, 0.1, 0.1, 0.1, 0.05*t, null, true);
+                            user.getWorld().spawnParticle(Particle.CRIT, location1, t, 0.1, 0.1, 0.1, 0.05 * t, null, true);
                         }
                     }
                 }.runTaskTimer(plugin, 0, 1);
@@ -231,18 +231,18 @@ public final class GameListener implements Listener {
         reset();
     }
 
-    public void popian(Location l ,Player p){
+    public void popian(Location l, Player p) {
         Random random = new Random();
         double x = l.getX() + (random.nextDouble() - 0.5) * 20;
         double y = l.getY() + Math.abs(random.nextDouble() - 0.5) * 20;
         double z = l.getZ() + (random.nextDouble() - 0.5) * 20;
-        Location location = new Location(p.getWorld(),x,y,z);
+        Location location = new Location(p.getWorld(), x, y, z);
         Vector vector = AtoB(l, location);
-        for (int t=0;t<=20;t++){
+        for (int t = 0; t <= 20; t++) {
             l.add(vector);
-            p.getWorld().spawnParticle(Particle.END_ROD,l,1,0,0,0,0,null,true);
-            double t1 = t*0.05;
-            l.subtract(0,t1,0);
+            p.getWorld().spawnParticle(Particle.END_ROD, l, 1, 0, 0, 0, 0, null, true);
+            double t1 = t * 0.05;
+            l.subtract(0, t1, 0);
             l.getNearbyPlayers(3, player -> !player.equals(p) && player.getGameMode() == GameMode.ADVENTURE)
                     .forEach(player -> {
                         player.damage(3, player);
