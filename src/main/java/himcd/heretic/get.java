@@ -21,6 +21,11 @@ public class get implements CommandExecutor {
                 p.getInventory().addItem(ItemFactory.S1);
             }
         }
+        if (S.equals("2")){
+            for (int c=S1;c>=1;c--){
+                p.getInventory().addItem(ItemFactory.S2);
+            }
+        }
         /// TODO: 3/23/2024   制作Factory直接对应数字
         return true;
     }
