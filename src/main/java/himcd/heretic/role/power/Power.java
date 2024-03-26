@@ -14,11 +14,14 @@ public abstract class Power {
         return null;
     }
 
+    //选择菜单里的物品
     public static ItemStack chooseItem(int i){
         return null;
     }
 
+    //1阶段被动
     public abstract BiConsumer<HPlayer, List<Player>> getBuff1();
 
+    //2阶段被动
     public abstract Consumer<HPlayer> getBuff2();
 }

@@ -1,5 +1,6 @@
 package himcd.heretic;
 
+import himcd.heretic.command.GetC;
 import himcd.heretic.game.GameListener;
 import himcd.heretic.game.GameState;
 import himcd.heretic.menu.ChoosePowerMenu;
@@ -9,6 +10,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,14 +28,14 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.Objects;
-
 import static himcd.heretic.game.GameState.State;
 import static himcd.heretic.game.GameState.state;
+import static himcd.heretic.game.HPlayer.player_info;
 
 @SuppressWarnings("SpellCheckingInspection")
 public final class Heretic extends JavaPlugin implements Listener {
 
+    public static YamlConfiguration config;
     public static Heretic plugin;
     public static BukkitTask tick_task;
     public static Scoreboard msb;
@@ -43,15 +45,17 @@ public final class Heretic extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        //初始化
+        //变量初始化
         plugin = this;
         tick_task = tick.runTaskTimer(this, 0, 1);
         msb = Bukkit.getScoreboardManager().getMainScoreboard();
-        try {
-            Objects.requireNonNull(Bukkit.getPluginCommand("get")).setExecutor(new get());
-        }catch (NullPointerException e) {
-            getLogger().warning(e.getMessage());
-        }
+        //配置文件
+        saveDefaultConfig();
+        config = (YamlConfiguration) getConfig();
+        //todo
+        //命令注册
+        var get_c = Bukkit.getPluginCommand("get");
+        if (get_c != null) get_c.setExecutor(new GetC());
         //队伍
         hereticT = msb.getTeam("heretic");
         if (hereticT == null) {
@@ -126,8 +130,8 @@ public final class Heretic extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    void onMove(PlayerMoveEvent e){
-        var p=e.getPlayer();
+    void onMove(PlayerMoveEvent e) {
+        var p = e.getPlayer();
         //文档
         if (p.getScoreboardTags().contains("docs")) {
             p.setGameMode(GameMode.ADVENTURE);

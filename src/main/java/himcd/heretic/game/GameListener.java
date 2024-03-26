@@ -10,9 +10,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -45,30 +45,38 @@ public final class GameListener implements Listener {
         portal_frame.remove(opf.get());
         if (portal_frame.isEmpty()) {
             state = State.SECOND;
-
-            //todo 进入二阶段
+            Bukkit.broadcast(msg.deserialize("<gold>[test]<white>二阶段"));
         }
     }
 
     @SuppressWarnings("UnstableApiUsage")
     @EventHandler
     void onDeath(EntityDamageByEntityEvent e) {
-        if(!(e.getEntity() instanceof Player hurt)) return;
-        var damage=e.getFinalDamage();
-
-        //结束判定
-        if(damage<hurt.getHealth()) return;
+        if (!(e.getEntity() instanceof Player hurt)) return;
+        //检测死亡
+        var damage = e.getFinalDamage();
+        if (damage < hurt.getHealth()) return;
         e.setCancelled(true);
+        //结束判定
         if (hereticT.hasPlayer(hurt)) {
-            Player winner=null;
-            var cause=e.getDamageSource().getCausingEntity();
-            if(cause instanceof Player ) winner= (Player) cause;
+            //H死亡
+            Player winner = null;
+            var cause = e.getDamageSource().getCausingEntity();
+            if (cause instanceof Player) winner = (Player) cause;
             else {
                 //todo
-//                cause.getPersistentDataContainer().get()
+                if (cause != null) {
+                    var owner = cause.getPersistentDataContainer().get(new NamespacedKey(plugin, "owner"), PersistentDataType.STRING);
+                    if (owner != null) {
+                        winner = Bukkit.getPlayer(owner);
+                    }
+                }
             }
-            endGame(winner);
+            if (winner != null) {
+                endGame(winner);
+            }
         } else if (believerT.hasPlayer(hurt)) {
+            //B死光
             believerT.removePlayer(hurt);
             if (believerT.getSize() == 0) {
                 endGame(heretic.player());
@@ -102,6 +110,7 @@ public final class GameListener implements Listener {
                 item1.setVelocity(normalize);
                 new BukkitRunnable() {
                     int t = 0;
+
                     @Override
                     public void run() {
                         Location location1 = item1.getLocation();
@@ -118,6 +127,7 @@ public final class GameListener implements Listener {
                             new BukkitRunnable() {
                                 final int maxR = 0;
                                 double radius = 3;
+
                                 @Override
                                 public void run() {
                                     if (radius < maxR) {
@@ -168,7 +178,7 @@ public final class GameListener implements Listener {
         return B.clone().subtract(A).toVector().normalize();
     }
 
-    private void endGame(Player winner){
+    private void endGame(Player winner) {
         reset();
     }
 }
