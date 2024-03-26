@@ -47,8 +47,7 @@ public final class GameListener implements Listener {
         portal_frame.remove(opf.get());
         if (portal_frame.isEmpty()) {
             state = State.SECOND;
-
-            //todo 进入二阶段
+            Bukkit.broadcast(msg.deserialize("<gold>[test]<white>二阶段"));
         }
     }
 
