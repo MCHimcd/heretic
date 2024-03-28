@@ -16,6 +16,7 @@ import static himcd.heretic.TickRunner.chooseMenu;
 import static himcd.heretic.TickRunner.prepareTime;
 import static himcd.heretic.game.HPlayer.*;
 import static himcd.heretic.menu.MainMenu.prepared;
+import static himcd.heretic.util.Message.msg;
 
 public final class GameState {
     private static final GameRunner gr = new GameRunner();
@@ -69,6 +70,14 @@ public final class GameState {
             var z=r.nextInt(256);
             portal_frame.add(new Location(h.getWorld(),x,0,z));
         }
+    }
+
+    //进入二阶段
+    public static void intoSecond() {
+        if(state!=State.FIRST) return;
+        state = State.SECOND;
+        Bukkit.broadcast(msg.deserialize("<gold>[test]<white>二阶段"));
+        gameTime=24001;
     }
 
     public enum State {

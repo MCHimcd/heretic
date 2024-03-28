@@ -46,8 +46,7 @@ public final class GameListener implements Listener {
         if (opf.isEmpty()) return;
         portal_frame.remove(opf.get());
         if (portal_frame.isEmpty()) {
-            state = State.SECOND;
-            Bukkit.broadcast(msg.deserialize("<gold>[test]<white>二阶段"));
+            intoSecond();
         }
     }
 
@@ -78,6 +77,7 @@ public final class GameListener implements Listener {
                 endGame(winner);
             }
         } else if (believerT.hasPlayer(hurt)) {
+            hurt.setGameMode(GameMode.SPECTATOR);
             //B死光
             believerT.removePlayer(hurt);
             if (believerT.getSize() == 0) {

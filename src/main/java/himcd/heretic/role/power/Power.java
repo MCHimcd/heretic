@@ -1,7 +1,8 @@
 package himcd.heretic.role.power;
 
 import himcd.heretic.game.HPlayer;
-import himcd.heretic.role.skill.Skill;
+import himcd.heretic.util.ItemCreator;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -9,14 +10,22 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static himcd.heretic.util.Message.msg;
+
 public abstract class Power {
     public static Power of(int id) {
-        return null;
+        return switch (id) {
+            case 1, 2, 3 -> new Test();
+            default -> null;
+        };
     }
 
     //选择菜单里的物品
-    public static ItemStack chooseItem(int i){
-        return null;
+    public static ItemStack chooseItem(int i) {
+        return switch (i) {
+            case 1, 2, 3 -> ItemCreator.create(Material.DEBUG_STICK).name(msg.deserialize("test")).getItem();
+            default -> null;
+        };
     }
 
     //1阶段被动

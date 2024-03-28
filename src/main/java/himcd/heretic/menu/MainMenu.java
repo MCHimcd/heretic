@@ -37,7 +37,11 @@ public class MainMenu extends SlotMenu {
                                 + "\n<gold>信徒徒获胜场次 %s\n<gray><bold>-----------------".formatted(Bwins.getScoreFor(p).getScore())
                 )));
         //准备
-        if (state == State.NONE) {
+        var count = Bukkit.getOnlinePlayers().stream().filter(pl -> pl.getGameMode() == GameMode.ADVENTURE).count();
+        if (count == 1) {
+            setSlot(1, ItemCreator.create(Material.BARRIER).name(Message.msg.deserialize("<dark_red>人数不足")).getItem(), (i, p) -> {
+            });
+        } else if (state == State.NONE) {
             isPrepared = prepared.contains(player);
             BiConsumer<ItemStack, Player> f = (i, p) -> {
                 if (isPrepared) {
@@ -48,7 +52,7 @@ public class MainMenu extends SlotMenu {
                     //未准备
                     prepared.add(p);
                     getInventory().setItem(1, quit);
-                    if (prepared.size() == Bukkit.getOnlinePlayers().stream().filter(pl -> pl.getGameMode() == GameMode.ADVENTURE).count())
+                    if (prepared.size() == count)
                         TickRunner.prepareTime = 200;
                     else TickRunner.prepareTime = 1200;
                 }
@@ -65,6 +69,7 @@ public class MainMenu extends SlotMenu {
                     "test",
                     "test2"
             ))).build());
+            p.teleport(p);
         });
     }
 }
