@@ -9,21 +9,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import static himcd.heretic.Heretic.plugin;
 
 public abstract class SlotMenu implements InventoryHolder {
-    private final Inventory inventory;
     protected final Player player;
-    private final HashMap<Integer, BiConsumer<ItemStack,Player>> slotFunctions = new HashMap<>();
+    private final Inventory inventory;
+    private final HashMap<Integer, BiConsumer<ItemStack, Player>> slotFunctions = new HashMap<>();
+    protected boolean close = true;
 
-    public SlotMenu(int size, Component title,Player p) {
+    public SlotMenu(int size, Component title, Player p) {
         inventory = plugin.getServer().createInventory(this, size, title);
-        player=p;
+        player = p;
     }
 
-    public void setSlot(int slot, ItemStack item, BiConsumer<ItemStack,Player> function) {
+    public void setSlot(int slot, ItemStack item, BiConsumer<ItemStack, Player> function) {
         inventory.setItem(slot, item);
         slotFunctions.put(slot, function);
     }
@@ -37,6 +37,8 @@ public abstract class SlotMenu implements InventoryHolder {
         if (slotFunctions.containsKey(slot)) {
             slotFunctions.get(slot).accept(inventory.getItem(slot), player);
         }
+        if (close) player.closeInventory();
+        close = true;
     }
 
     @Override

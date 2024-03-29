@@ -40,6 +40,7 @@ public class MainMenu extends SlotMenu {
         var count = Bukkit.getOnlinePlayers().stream().filter(pl -> pl.getGameMode() == GameMode.ADVENTURE).count();
         if (count == 1) {
             setSlot(1, ItemCreator.create(Material.BARRIER).name(Message.msg.deserialize("<dark_red>人数不足")).getItem(), (i, p) -> {
+                close = false;
             });
         } else if (state == State.NONE) {
             isPrepared = prepared.contains(player);
@@ -61,6 +62,7 @@ public class MainMenu extends SlotMenu {
             setSlot(1, isPrepared ? quit : join, f);
         } else
             setSlot(1, ItemCreator.create(Material.BARRIER).name(Message.msg.deserialize("<dark_red>游戏已开始")).getItem(), (i, p) -> {
+                close = false;
             });
         setSlot(2, docs, (i, p) -> {
             p.setGameMode(GameMode.SPECTATOR);
@@ -70,6 +72,7 @@ public class MainMenu extends SlotMenu {
                     "test2"
             ))).build());
             p.teleport(p);
+            close = false;
         });
     }
 }
