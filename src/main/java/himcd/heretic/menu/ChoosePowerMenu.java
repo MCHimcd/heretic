@@ -31,6 +31,7 @@ public class ChoosePowerMenu extends SlotMenu {
     }
 
     public void tick() {
+        player.getOpenInventory().setTitle("剩余时间："+time);
         if(time--==0){
             start(player, ids.get(new Random().nextInt(ids.size())));
         }
