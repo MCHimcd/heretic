@@ -28,19 +28,26 @@ public final class TickRunner extends BukkitRunnable {
                     MainMenu.prepared.stream().map(Player::getName).collect(Collectors.joining(","))
             )));
             case FIRST, SECOND -> {
-                //BossBar显示进度
+                //BossBar显示
                 if (state == State.FIRST) {
+                    //1阶段
                     var c = portal_frame.size();
-                    bar.progress(c / 5f);
-                    bar.name(msg.deserialize("<gold>Heretic进度：<aqua>%s<white>/<aqua>5".formatted(c)));
-                    bar.color(switch (c) {
+                    bar_h.progress(c / 5f);
+                    bar_h.name(msg.deserialize("<gold>Heretic进度：<aqua>%d<white>/<aqua>5".formatted(c)));
+                    bar_h.color(switch (c) {
                         case 0, 1 -> BossBar.Color.GREEN;
                         case 2, 3 -> BossBar.Color.YELLOW;
                         case 4 -> BossBar.Color.RED;
                         default -> BossBar.Color.WHITE;
                     });
+                    bar_time.progress((24000 - gameTime) / 24000f);
+                    bar_time.name(msg.deserialize("<gold>剩余时间：<aqua>%d".formatted((24000 - gameTime) / 20)));
+                } else {
+                    //2阶段
+                    bar_time.progress((36000 - gameTime) / 36000f);
+                    bar_time.name(msg.deserialize("<gold>剩余时间：<aqua>%d".formatted((36000 - gameTime) / 20)));
                 }
-                //todo 指向H , frame位置
+                //todo 指向H
             }
         }
     }

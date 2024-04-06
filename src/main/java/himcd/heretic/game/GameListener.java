@@ -16,6 +16,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
@@ -24,6 +25,7 @@ import java.util.Random;
 import static himcd.heretic.Heretic.*;
 import static himcd.heretic.game.GameState.*;
 import static himcd.heretic.game.HPlayer.heretic;
+import static himcd.heretic.util.Message.h_board;
 import static himcd.heretic.util.Message.msg;
 
 public final class GameListener implements Listener {
@@ -44,7 +46,12 @@ public final class GameListener implements Listener {
         if (b.getType() != Material.END_PORTAL_FRAME) return;
         var opf = portal_frame.stream().filter(l -> l.getBlockX() == b.getX() && l.getBlockZ() == b.getZ()).findAny();
         if (opf.isEmpty()) return;
-        portal_frame.remove(opf.get());
+        var l = opf.get();
+        portal_frame.remove(l);
+        Objective frame = h_board.getObjective("frame");
+        if (frame != null) {
+            frame.getScore("%d %d".formatted(l.getBlockX(), l.getBlockZ())).resetScore();
+        }
         if (portal_frame.isEmpty()) {
             intoSecond();
         }
@@ -58,6 +65,7 @@ public final class GameListener implements Listener {
         var damage = e.getFinalDamage();
         if (damage < hurt.getHealth()) return;
         e.setCancelled(true);
+        if (state == State.NONE || state == State.PREPARE) return;
         //结束判定
         if (hereticT.hasPlayer(hurt)) {
             //H死亡
@@ -227,6 +235,9 @@ public final class GameListener implements Listener {
     }
 
     private void endGame(Player winner) {
+        if (winner != null) {
+            Bukkit.broadcast(msg.deserialize("<gold>胜利者：<reset>%s".formatted(winner.getName())));
+        }
         reset();
     }
 

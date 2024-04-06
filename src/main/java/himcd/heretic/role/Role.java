@@ -15,6 +15,7 @@ public abstract class Role {
 
     public static Role of(Player pl, String name) {
         return switch (name) {
+            case "Default" -> new Default(pl);
             case "Peter" -> new Peter(pl);
             default -> null;
         };

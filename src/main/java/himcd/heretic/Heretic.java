@@ -3,6 +3,7 @@ package himcd.heretic;
 import himcd.heretic.command.GetC;
 import himcd.heretic.game.GameListener;
 import himcd.heretic.game.GameState;
+import himcd.heretic.game.HPlayerInfo;
 import himcd.heretic.menu.ChoosePowerMenu;
 import himcd.heretic.menu.MainMenu;
 import net.kyori.adventure.text.Component;
@@ -23,14 +24,13 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.Criteria;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
+import org.bukkit.scoreboard.*;
 
 import static himcd.heretic.game.GameState.State;
 import static himcd.heretic.game.GameState.state;
 import static himcd.heretic.game.HPlayer.player_info;
+import static himcd.heretic.util.Message.h_board;
+import static himcd.heretic.util.Message.msg;
 
 @SuppressWarnings("SpellCheckingInspection")
 public final class Heretic extends JavaPlugin implements Listener {
@@ -75,6 +75,9 @@ public final class Heretic extends JavaPlugin implements Listener {
         if (Hwins == null) Hwins = msb.registerNewObjective("Hwins", Criteria.DUMMY, Component.empty());
         Bwins = msb.getObjective("Bwins"); //信徒获胜场次
         if (Bwins == null) Bwins = msb.registerNewObjective("Bwins", Criteria.DUMMY, Component.empty());
+        h_board = Bukkit.getScoreboardManager().getNewScoreboard();
+        Objective frame = h_board.registerNewObjective("frame", Criteria.DUMMY, msg.deserialize("剩余位置"));
+        frame.setDisplaySlot(DisplaySlot.SIDEBAR);
         //事件
         Bukkit.getPluginManager().registerEvents(new GameListener(), this);
         Bukkit.getPluginManager().registerEvents(this, this);
@@ -98,6 +101,7 @@ public final class Heretic extends JavaPlugin implements Listener {
             team.removeEntity(p);
         }
         p.removeScoreboardTag("docs");
+        player_info.putIfAbsent(p, new HPlayerInfo("Default", "Heal"));
     }
 
     //主菜单

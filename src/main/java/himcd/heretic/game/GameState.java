@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Objective;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,8 +17,7 @@ import static himcd.heretic.TickRunner.chooseMenu;
 import static himcd.heretic.TickRunner.prepareTime;
 import static himcd.heretic.game.HPlayer.*;
 import static himcd.heretic.menu.MainMenu.prepared;
-import static himcd.heretic.util.Message.bar;
-import static himcd.heretic.util.Message.msg;
+import static himcd.heretic.util.Message.*;
 
 public final class GameState {
     public static final List<Location> portal_frame = new ArrayList<>();
@@ -41,7 +41,12 @@ public final class GameState {
         prepared.clear();
         portal_frame.clear();
         chooseMenu = null;
-        Bukkit.getOnlinePlayers().forEach(p -> p.hideBossBar(bar));
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+            p.hideBossBar(bar_h);
+            p.hideBossBar(bar_time);
+        });
+        h_board.getEntries().forEach(h_board::resetScores);
     }
 
     public static void prepare() {
@@ -72,9 +77,17 @@ public final class GameState {
             var x = r.nextInt(256);
             var z = r.nextInt(256);
             portal_frame.add(new Location(h.getWorld(), x, 0, z));
+            Objective frame = h_board.getObjective("frame");
+            if (frame != null) {
+                frame.getScore("%d %d".formatted(x, z)).setScore(i);
+            }
         }
-        //showBar
-        Bukkit.getOnlinePlayers().forEach(p -> p.showBossBar(bar));
+        //信息
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            p.showBossBar(bar_h);
+            p.showBossBar(bar_time);
+        });
+        h.setScoreboard(h_board);
     }
 
     //进入二阶段
@@ -82,13 +95,24 @@ public final class GameState {
         if (state != State.FIRST) return;
         state = State.SECOND;
         Bukkit.getOnlinePlayers().forEach(p -> {
-            p.hideBossBar(bar);
+            p.hideBossBar(bar_h);
             p.sendMessage(msg.deserialize("<gold>[test]<white>二阶段"));
         });
         gameTime = 24001;
     }
 
+    //进入死斗
+    public static void intoEnding() {
+        if (state != State.SECOND) return;
+        state = State.ENDING;
+        players.keySet().forEach(p -> p.teleport(new Location(p.getWorld(), -16, 5, -16)));
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            p.hideBossBar(bar_time);
+            p.sendMessage(msg.deserialize("<gold>[test]<white>死斗"));
+        });
+    }
+
     public enum State {
-        NONE, FIRST, SECOND, PREPARE
+        NONE, FIRST, SECOND, ENDING, PREPARE
     }
 }
