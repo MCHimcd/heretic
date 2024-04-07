@@ -1,12 +1,16 @@
 package himcd.heretic.game;
 
 import himcd.heretic.menu.ChoosePowerMenu;
+import himcd.heretic.role.skill.Skill;
+import himcd.heretic.util.ItemCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Objective;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -88,6 +92,11 @@ public final class GameState {
             p.showBossBar(bar_time);
         });
         h.setScoreboard(h_board);
+        //给物品
+        h.getInventory().addItem(ItemCreator.create(Material.END_PORTAL_FRAME).getItem());
+        players.keySet().forEach(p->{
+            p.getInventory().addItem(Skill.getItem(player_info.get(p).skill()));
+        });
     }
 
     //进入二阶段

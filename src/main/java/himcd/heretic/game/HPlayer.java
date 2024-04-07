@@ -21,12 +21,12 @@ public record HPlayer(Player player, Role role, Skill skill, Power power) {
     public static Map<Player, HPlayerInfo> player_info = new HashMap<>();
 
     public HPlayer(Player player, HPlayerInfo info) {
-        this(player, Role.of(player, info.role()), Skill.of(info.skill()), null);
+        this(player, Role.of(player, info.role()), Skill.of(player, info.skill()), null);
         believerT.addPlayer(player);
     }
 
     public HPlayer(Player player, HPlayerInfo info, int power) {
-        this(player, Role.of(player, info.role()), Skill.of(info.skill()), Power.of(power));
+        this(player, Role.of(player, info.role()), Skill.of(player, info.skill()), Power.of(power));
     }
 
     public HPlayer {

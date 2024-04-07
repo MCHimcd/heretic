@@ -1,8 +1,10 @@
 package himcd.heretic;
 
+import himcd.heretic.game.HPlayer;
 import himcd.heretic.menu.ChoosePowerMenu;
 import himcd.heretic.menu.MainMenu;
 import net.kyori.adventure.bossbar.BossBar;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -42,6 +44,7 @@ public final class TickRunner extends BukkitRunnable {
                     });
                     bar_time.progress((24000 - gameTime) / 24000f);
                     bar_time.name(msg.deserialize("<gold>剩余时间：<aqua>%d".formatted((24000 - gameTime) / 20)));
+                    portal_frame.forEach(l-> HPlayer.heretic.player().spawnParticle(Particle.END_ROD,l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0,1,0),1));
                 } else {
                     //2阶段
                     bar_time.progress((36000 - gameTime) / 36000f);
