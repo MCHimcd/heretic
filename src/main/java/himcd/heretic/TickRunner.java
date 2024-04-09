@@ -11,6 +11,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.stream.Collectors;
 
 import static himcd.heretic.game.GameState.*;
+import static himcd.heretic.game.HPlayer.believers;
+import static himcd.heretic.game.HPlayer.heretic;
 import static himcd.heretic.util.Message.*;
 
 public final class TickRunner extends BukkitRunnable {
@@ -44,13 +46,23 @@ public final class TickRunner extends BukkitRunnable {
                     });
                     bar_time.progress((24000 - gameTime) / 24000f);
                     bar_time.name(msg.deserialize("<gold>剩余时间：<aqua>%d".formatted((24000 - gameTime) / 20)));
-                    portal_frame.forEach(l-> HPlayer.heretic.player().spawnParticle(Particle.END_ROD,l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0,1,0),1));
+                    portal_frame.forEach(l -> heretic.player().spawnParticle(Particle.END_ROD, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0, 1, 0), 1));
                 } else {
                     //2阶段
                     bar_time.progress((36000 - gameTime) / 36000f);
                     bar_time.name(msg.deserialize("<gold>剩余时间：<aqua>%d".formatted((36000 - gameTime) / 20)));
                 }
-                //todo 指向H
+                //指向H
+                var hl = heretic.player().getLocation();
+                believers.stream().map(HPlayer::player).forEach(p -> {
+                    var pl = p.getLocation();
+                    var y1 = pl.getYaw();
+                    var y2 = pl.clone().subtract(hl).getYaw();
+                    int v = (int) (Math.min(-12, Math.max(12, (y2 - y1) / 5)));
+                    p.sendActionBar(msg.deserialize(
+                            "<white>" + "|".repeat(v + 12) + "<gold>|<white>" + "|".repeat(12 - v)
+                    ));
+                });
             }
         }
     }
