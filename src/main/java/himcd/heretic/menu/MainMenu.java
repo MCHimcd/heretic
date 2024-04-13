@@ -16,6 +16,7 @@ import java.util.function.BiConsumer;
 
 import static himcd.heretic.Heretic.Bwins;
 import static himcd.heretic.Heretic.Hwins;
+import static himcd.heretic.TickRunner.prepareTime;
 import static himcd.heretic.game.GameState.State;
 import static himcd.heretic.game.GameState.state;
 
@@ -53,11 +54,14 @@ public class MainMenu extends SlotMenu {
                     //未准备
                     prepared.add(p);
                     getInventory().setItem(1, quit);
-                    if (prepared.size() == count)
-                        TickRunner.prepareTime = 200;
-                    else TickRunner.prepareTime = 1200;
                 }
+                if(prepared.size()==1)
+                    prepareTime=-1;
+                else if (prepared.size() == count)
+                    prepareTime = 200;
+                else prepareTime = 1200;
                 isPrepared = !isPrepared;
+                close=false;
             };
             setSlot(1, isPrepared ? quit : join, f);
         } else

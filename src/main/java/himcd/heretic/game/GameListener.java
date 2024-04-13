@@ -45,7 +45,10 @@ public final class GameListener implements Listener {
         var b = e.getBlockPlaced();
         if (b.getType() != Material.END_PORTAL_FRAME) return;
         var opf = portal_frame.stream().filter(l -> l.getBlockX() == b.getX() && l.getBlockZ() == b.getZ()).findAny();
-        if (opf.isEmpty()) return;
+        if (opf.isEmpty()) {
+            e.setCancelled(true);
+            return;
+        }
         var l = opf.get();
         portal_frame.remove(l);
         Objective frame = h_board.getObjective("frame");

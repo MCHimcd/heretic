@@ -36,6 +36,11 @@ public class ItemCreator {
         return this;
     }
 
+    public ItemCreator amount(int amount){
+        item.setAmount(amount);
+        return this;
+    }
+
     public ItemCreator data(int data) {
         item.editMeta(meta -> meta.setCustomModelData(data));
         return this;

@@ -24,15 +24,14 @@ public class ChoosePowerMenu extends SlotMenu {
         chooseMenu = this;
         Collections.shuffle(ids);
         //物品
-        BiConsumer<ItemStack, Player> f = (i, p) -> start(p, i.getItemMeta().getCustomModelData());
-        setSlot(2, Power.chooseItem(ids.getFirst()), f);
-        setSlot(4, Power.chooseItem(ids.get(1)), f);
-        setSlot(6, Power.chooseItem(ids.get(2)), f);
+        setSlot(2, Power.chooseItem(ids.getFirst()), (i, p) -> start(p, ids.getFirst()));
+        setSlot(4, Power.chooseItem(ids.get(1)),  (i, p) -> start(p, ids.get(1)));
+        setSlot(6, Power.chooseItem(ids.get(2)),  (i, p) -> start(p, ids.get(2)));
     }
 
     public void tick() {
         player.getOpenInventory().setTitle("剩余时间："+time);
-        if(time--==0){
+        if(time--<=0){
             start(player, ids.get(new Random().nextInt(ids.size())));
         }
     }

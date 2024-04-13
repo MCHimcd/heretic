@@ -16,16 +16,17 @@ public abstract class Power {
     public static Power of(int id) {
         return switch (id) {
             case 1, 2, 3 -> new Test();
-            default -> null;
+            default -> new Test();
         };
     }
 
     //选择菜单里的物品
     public static ItemStack chooseItem(int i) {
-        return switch (i) {
-            case 1, 2, 3 -> ItemCreator.create(Material.DEBUG_STICK).name(msg.deserialize("test")).getItem();
-            default -> null;
+        var it= switch (i) {
+            case 1, 2, 3 -> ItemCreator.create(Material.DEBUG_STICK).name(msg.deserialize("test"));
+            default -> ItemCreator.create(Material.AIR);
         };
+        return it.data(i).getItem();
     }
 
     //1阶段被动

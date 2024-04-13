@@ -17,7 +17,7 @@ public abstract class Skill {
     public static Skill of(Player pl, String name) {
         return switch (name) {
             case "heal" -> new Heal(pl);
-            default -> null;
+            default -> new Heal(pl);
         };
     }
 

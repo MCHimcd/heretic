@@ -1,9 +1,11 @@
 package himcd.heretic.game;
 
+import himcd.heretic.Heretic;
 import himcd.heretic.menu.ChoosePowerMenu;
 import himcd.heretic.role.skill.Skill;
 import himcd.heretic.util.ItemCreator;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -48,6 +50,7 @@ public final class GameState {
             p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
             p.hideBossBar(bar_h);
             p.hideBossBar(bar_time);
+            resetPlayer(p);
         });
         h_board.getEntries().forEach(h_board::resetScores);
     }
@@ -89,10 +92,11 @@ public final class GameState {
         Bukkit.getOnlinePlayers().forEach(p -> {
             p.showBossBar(bar_h);
             p.showBossBar(bar_time);
+            p.setGameMode(GameMode.SURVIVAL);
         });
         h.setScoreboard(h_board);
         //给物品
-        h.getInventory().addItem(ItemCreator.create(Material.END_PORTAL_FRAME).getItem());
+        h.getInventory().addItem(ItemCreator.create(Material.END_PORTAL_FRAME).amount(5).getItem());
         players.keySet().forEach(p-> p.getInventory().addItem(Skill.getItem(player_info.get(p).skill())));
     }
 

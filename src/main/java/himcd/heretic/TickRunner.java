@@ -4,6 +4,9 @@ import himcd.heretic.game.HPlayer;
 import himcd.heretic.menu.ChoosePowerMenu;
 import himcd.heretic.menu.MainMenu;
 import net.kyori.adventure.bossbar.BossBar;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.GameMode;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -28,15 +31,17 @@ public final class TickRunner extends BukkitRunnable {
         //信息显示
         switch (state) {
             case NONE -> send_actionbar(msg.deserialize("距离游戏开始：%s 未准备玩家：%s".formatted(
-                    prepareTime,
-                    MainMenu.prepared.stream().map(Player::getName).collect(Collectors.joining(","))
+                    prepareTime==-1?"Null": (prepareTime+20) /20,
+                    Bukkit.getOnlinePlayers().stream()
+                            .filter(p->p.getGameMode()==GameMode.ADVENTURE&&!MainMenu.prepared.contains(p))
+                            .map(Player::getName).collect(Collectors.joining(","))
             )));
             case FIRST, SECOND -> {
                 //BossBar显示
                 if (state == State.FIRST) {
                     //1阶段
-                    var c = portal_frame.size();
-                    bar_h.progress(c / 5f);
+                    var c =5- portal_frame.size();
+                    bar_h.progress(c/ 5f);
                     bar_h.name(msg.deserialize("<gold>Heretic进度：<aqua>%d<white>/<aqua>5".formatted(c)));
                     bar_h.color(switch (c) {
                         case 0, 1 -> BossBar.Color.GREEN;

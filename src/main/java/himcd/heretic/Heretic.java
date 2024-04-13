@@ -16,12 +16,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.*;
@@ -92,16 +94,12 @@ public final class Heretic extends JavaPlugin implements Listener {
 
     @EventHandler
     void onPlayerJoin(PlayerJoinEvent e) {
-        var p = e.getPlayer();
-        p.getInventory().clear();
-        p.clearActivePotionEffects();
-        p.setGameMode(GameMode.ADVENTURE);
-        Team team = msb.getEntityTeam(p);
-        if (team != null) {
-            team.removeEntity(p);
-        }
-        p.removeScoreboardTag("docs");
-        player_info.putIfAbsent(p, new HPlayerInfo("Default", "Heal"));
+        resetPlayer(e.getPlayer());
+    }
+
+    @EventHandler
+    void onDeath(PlayerDeathEvent e){
+        e.setCancelled(true);
     }
 
     //主菜单
@@ -126,7 +124,7 @@ public final class Heretic extends JavaPlugin implements Listener {
 
     @EventHandler
     void onClose(InventoryCloseEvent e) {
-        if (state != State.PREPARE) return;
+        if (state != State.PREPARE||e.getReason()!= InventoryCloseEvent.Reason.PLUGIN) return;
         //防止关闭选择菜单
         if (e.getInventory().getHolder() instanceof ChoosePowerMenu m) {
             e.getPlayer().openInventory(m.getInventory());
@@ -142,5 +140,18 @@ public final class Heretic extends JavaPlugin implements Listener {
             p.removeScoreboardTag("docs");
             e.setCancelled(true);
         }
+    }
+
+    public static void resetPlayer(Player p){
+        p.getInventory().clear();
+        p.clearActivePotionEffects();
+        p.setGameMode(GameMode.ADVENTURE);
+        Team team = msb.getEntityTeam(p);
+        if (team != null) {
+            team.removeEntity(p);
+        }
+        p.removeScoreboardTag("docs");
+        player_info.put(p, new HPlayerInfo("Default", "Heal"));
+        p.getInventory().addItem(new ItemStack(Material.CLOCK));
     }
 }
