@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.stream.Collectors;
 
+import static himcd.heretic.Heretic.logger;
 import static himcd.heretic.game.GameState.*;
 import static himcd.heretic.game.HPlayer.believers;
 import static himcd.heretic.game.HPlayer.heretic;
@@ -68,9 +69,10 @@ public final class TickRunner extends BukkitRunnable {
                 var hl = heretic.player().getLocation();
                 believers.stream().map(HPlayer::player).forEach(p -> {
                     var pl = p.getLocation();
-                    var y1 = pl.getYaw();
-                    var y2 = pl.clone().subtract(hl).getYaw();
-                    int v = (int) (Math.min(-12, Math.max(12, (y2 - y1) / 5)));
+                    var v1 = pl.getDirection();
+                    var v2 = pl.clone().subtract(hl).toVector();
+                    var angle = 170 - Math.toDegrees(v2.angle(v1));
+                    int v = (v1.crossProduct(v2).getY() >= 0 ? 1 : -1) * (int) Math.min(12, angle / 5);
                     p.sendActionBar(msg.deserialize(
                             "<white>" + "|".repeat(v + 12) + "<gold>|<white>" + "|".repeat(12 - v)
                     ));
