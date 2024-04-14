@@ -6,6 +6,7 @@ import himcd.heretic.game.GameState;
 import himcd.heretic.game.HPlayer;
 import himcd.heretic.menu.ChoosePowerMenu;
 import himcd.heretic.menu.MainMenu;
+import himcd.heretic.menu.SlotMenu;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -126,7 +127,7 @@ public final class Heretic extends JavaPlugin implements Listener {
     @EventHandler
     void onClick(InventoryClickEvent e) {
         if (state == State.NONE || state == State.PREPARE) e.setCancelled(true);
-        if (!(e.getWhoClicked() instanceof Player p) || !(e.getInventory().getHolder() instanceof MainMenu m)) return;
+        if (!(e.getWhoClicked() instanceof Player p) || !(e.getInventory().getHolder() instanceof SlotMenu m)) return;
         m.handleClick(e.getSlot());
     }
 

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
 
 import static himcd.heretic.Heretic.logger;
@@ -25,11 +26,10 @@ public class ChoosePowerMenu extends SlotMenu {
         chooseMenu = this;
         Collections.shuffle(ids);
         //物品
-        //todo 点了没反应？？？？？？？？？？？？
-        setSlot(1,new ItemStack(Material.ACACIA_BOAT),(i,p)->{logger.info("????????????????????");});
-        setSlot(2, Power.chooseItem(ids.getFirst()), (i, p) -> {logger.info("????????????????????");});
-        setSlot(4, Power.chooseItem(ids.get(1)), (i, p) -> start(p, ids.get(1)));
-        setSlot(6, Power.chooseItem(ids.get(2)), (i, p) -> start(p, ids.get(2)));
+        BiConsumer<ItemStack, Player> f = (i, p) -> start(p, i.getItemMeta().getCustomModelData());
+        setSlot(2, Power.chooseItem(ids.getFirst()), f);
+        setSlot(4, Power.chooseItem(ids.get(1)), f);
+        setSlot(6, Power.chooseItem(ids.get(2)), f);
     }
 
     public void tick() {
