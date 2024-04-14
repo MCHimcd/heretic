@@ -23,7 +23,9 @@ public abstract class Power {
     //选择菜单里的物品
     public static ItemStack chooseItem(int i) {
         var it= switch (i) {
-            case 1, 2, 3 -> ItemCreator.create(Material.DEBUG_STICK).name(msg.deserialize("test"));
+            case 1 -> ItemCreator.create(Material.DIAMOND).name(msg.deserialize("test1"));
+            case 2 -> ItemCreator.create(Material.DIAMOND).name(msg.deserialize("test2"));
+            case 3 -> ItemCreator.create(Material.DIAMOND).name(msg.deserialize("test3"));
             default -> ItemCreator.create(Material.AIR);
         };
         return it.data(i).getItem();

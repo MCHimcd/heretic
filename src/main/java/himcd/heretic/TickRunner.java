@@ -31,17 +31,17 @@ public final class TickRunner extends BukkitRunnable {
         //信息显示
         switch (state) {
             case NONE -> send_actionbar(msg.deserialize("距离游戏开始：%s 未准备玩家：%s".formatted(
-                    prepareTime==-1?"Null": (prepareTime+20) /20,
+                    prepareTime == -1 ? "Null" : (prepareTime + 20) / 20,
                     Bukkit.getOnlinePlayers().stream()
-                            .filter(p->p.getGameMode()==GameMode.ADVENTURE&&!MainMenu.prepared.contains(p))
+                            .filter(p -> p.getGameMode() == GameMode.ADVENTURE && !MainMenu.prepared.contains(p))
                             .map(Player::getName).collect(Collectors.joining(","))
             )));
             case FIRST, SECOND -> {
                 //BossBar显示
                 if (state == State.FIRST) {
                     //1阶段
-                    var c =5- portal_frame.size();
-                    bar_h.progress(c/ 5f);
+                    var c = 5 - portal_frame.size();
+                    bar_h.progress(c / 5f);
                     bar_h.name(msg.deserialize("<gold>Heretic进度：<aqua>%d<white>/<aqua>5".formatted(c)));
                     bar_h.color(switch (c) {
                         case 0, 1 -> BossBar.Color.GREEN;
@@ -52,12 +52,12 @@ public final class TickRunner extends BukkitRunnable {
                     bar_time.progress((24000 - gameTime) / 24000f);
                     bar_time.name(msg.deserialize("<gold>剩余时间：<aqua>%d".formatted((24000 - gameTime) / 20)));
                     portal_frame.forEach(l -> {
-                        heretic.player().spawnParticle(Particle.END_ROD, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 1, 0.5), 10,0,10,0,0);
-                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0,0.1,0,0,5);
-                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0,-0.1,0,0,5);
-                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0,0,0,0.1,5);
-                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0,0,0,-0.1,5);
-                        heretic.player().spawnParticle(Particle.DUST_COLOR_TRANSITION, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 30,0.3,0.3,0.3,0.5,new Particle.DustTransition(Color.BLUE,Color.AQUA,1));
+                        heretic.player().spawnParticle(Particle.END_ROD, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 1, 0.5), 10, 0, 10, 0, 0);
+                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0, 0.1, 0, 0, 5);
+                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0, -0.1, 0, 0, 5);
+                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0, 0, 0, 0.1, 5);
+                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0, 0, 0, -0.1, 5);
+                        heretic.player().spawnParticle(Particle.DUST_COLOR_TRANSITION, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 30, 0.3, 0.3, 0.3, 0.5, new Particle.DustTransition(Color.BLUE, Color.AQUA, 1));
                     });
                 } else {
                     //2阶段

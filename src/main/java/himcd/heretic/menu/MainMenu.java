@@ -1,6 +1,5 @@
 package himcd.heretic.menu;
 
-import himcd.heretic.TickRunner;
 import himcd.heretic.util.ItemCreator;
 import himcd.heretic.util.Message;
 import net.kyori.adventure.inventory.Book;
@@ -55,13 +54,13 @@ public class MainMenu extends SlotMenu {
                     prepared.add(p);
                     getInventory().setItem(1, quit);
                 }
-                if(prepared.size()==1)
-                    prepareTime=-1;
+                if (prepared.size() == 1)
+                    prepareTime = -1;
                 else if (prepared.size() == count)
-                    prepareTime = 200;
+                    prepareTime = 20;
                 else prepareTime = 1200;
                 isPrepared = !isPrepared;
-                close=false;
+                close = false;
             };
             setSlot(1, isPrepared ? quit : join, f);
         } else

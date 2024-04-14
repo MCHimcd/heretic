@@ -1,6 +1,5 @@
 package himcd.heretic.game;
 
-import himcd.heretic.Heretic;
 import himcd.heretic.menu.ChoosePowerMenu;
 import himcd.heretic.role.skill.Skill;
 import himcd.heretic.util.ItemCreator;
@@ -21,6 +20,7 @@ import static himcd.heretic.Heretic.*;
 import static himcd.heretic.TickRunner.chooseMenu;
 import static himcd.heretic.TickRunner.prepareTime;
 import static himcd.heretic.game.HPlayer.*;
+import static himcd.heretic.game.HPlayerInfo.player_info;
 import static himcd.heretic.menu.MainMenu.prepared;
 import static himcd.heretic.util.Message.*;
 
@@ -46,11 +46,13 @@ public final class GameState {
         prepared.clear();
         portal_frame.clear();
         chooseMenu = null;
+        player_info.clear();
         Bukkit.getOnlinePlayers().forEach(p -> {
             p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
             p.hideBossBar(bar_h);
             p.hideBossBar(bar_time);
             resetPlayer(p);
+            player_info.putIfAbsent(p, new HPlayerInfo("", ""));
         });
         h_board.getEntries().forEach(h_board::resetScores);
     }
@@ -64,6 +66,12 @@ public final class GameState {
     }
 
     public static void start(Player h, int power) {
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            p.showBossBar(bar_h);
+            p.showBossBar(bar_time);
+            p.setGameMode(GameMode.SURVIVAL);
+            p.closeInventory();
+        });
         //玩家队伍
         heretic = new HPlayer(h, player_info.get(h), power);
         believers.addAll(prepared.stream()
@@ -88,16 +96,10 @@ public final class GameState {
                 frame.getScore("%d %d".formatted(x, z)).setScore(i);
             }
         }
-        //信息
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            p.showBossBar(bar_h);
-            p.showBossBar(bar_time);
-            p.setGameMode(GameMode.SURVIVAL);
-        });
+        //给物品,信息
         h.setScoreboard(h_board);
-        //给物品
         h.getInventory().addItem(ItemCreator.create(Material.END_PORTAL_FRAME).amount(5).getItem());
-        players.keySet().forEach(p-> p.getInventory().addItem(Skill.getItem(player_info.get(p).skill())));
+        players.keySet().forEach(p -> p.getInventory().addItem(Skill.getItem(player_info.get(p).skill())));
     }
 
     //进入二阶段

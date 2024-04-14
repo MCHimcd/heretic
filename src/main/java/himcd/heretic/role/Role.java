@@ -30,7 +30,7 @@ public abstract class Role {
                             """)).data(1000000).getItem();
             case 2 ->
                     ItemCreator.create(Material.CLAY).name(Message.msg.deserialize("<gold><bold>破片手雷</bold> <red><右键>")).data(2000000).getItem();
-            default -> null;
+            default -> new ItemStack(Material.AIR);
         };
     }
 

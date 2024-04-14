@@ -3,7 +3,7 @@ package himcd.heretic;
 import himcd.heretic.command.GetC;
 import himcd.heretic.game.GameListener;
 import himcd.heretic.game.GameState;
-import himcd.heretic.game.HPlayerInfo;
+import himcd.heretic.game.HPlayer;
 import himcd.heretic.menu.ChoosePowerMenu;
 import himcd.heretic.menu.MainMenu;
 import net.kyori.adventure.text.Component;
@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -23,14 +24,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.*;
 
+import java.util.logging.Logger;
+
 import static himcd.heretic.game.GameState.State;
 import static himcd.heretic.game.GameState.state;
-import static himcd.heretic.game.HPlayer.player_info;
 import static himcd.heretic.util.Message.h_board;
 import static himcd.heretic.util.Message.msg;
 
@@ -43,6 +44,7 @@ public final class Heretic extends JavaPlugin implements Listener {
     public static Scoreboard msb;
     public static Team hereticT, believerT;
     public static Objective Hwins, Bwins;
+    public static Logger logger;
     private final TickRunner tick = new TickRunner();
 
     @Override
@@ -51,6 +53,7 @@ public final class Heretic extends JavaPlugin implements Listener {
         plugin = this;
         tick_task = tick.runTaskTimer(this, 0, 1);
         msb = Bukkit.getScoreboardManager().getMainScoreboard();
+        logger = getLogger();
         //配置文件
         saveDefaultConfig();
         config = (YamlConfiguration) getConfig();
@@ -94,12 +97,17 @@ public final class Heretic extends JavaPlugin implements Listener {
 
     @EventHandler
     void onPlayerJoin(PlayerJoinEvent e) {
-        resetPlayer(e.getPlayer());
+        HPlayer.resetPlayer(e.getPlayer());
     }
 
     @EventHandler
-    void onDeath(PlayerDeathEvent e){
+    void onDeath(PlayerDeathEvent e) {
         e.setCancelled(true);
+    }
+
+    @EventHandler
+    void onHurt(EntityDamageEvent e) {
+        if (e.getEntity() instanceof Player && state == State.NONE || state == State.PREPARE) e.setCancelled(true);
     }
 
     //主菜单
@@ -124,10 +132,10 @@ public final class Heretic extends JavaPlugin implements Listener {
 
     @EventHandler
     void onClose(InventoryCloseEvent e) {
-        if (state != State.PREPARE||e.getReason()!= InventoryCloseEvent.Reason.PLUGIN) return;
-        //防止关闭选择菜单
+        if (state != State.PREPARE || e.getReason() == InventoryCloseEvent.Reason.PLUGIN) return;
+        //关闭选择菜单
         if (e.getInventory().getHolder() instanceof ChoosePowerMenu m) {
-            e.getPlayer().openInventory(m.getInventory());
+            m.randomStart();
         }
     }
 
@@ -140,18 +148,5 @@ public final class Heretic extends JavaPlugin implements Listener {
             p.removeScoreboardTag("docs");
             e.setCancelled(true);
         }
-    }
-
-    public static void resetPlayer(Player p){
-        p.getInventory().clear();
-        p.clearActivePotionEffects();
-        p.setGameMode(GameMode.ADVENTURE);
-        Team team = msb.getEntityTeam(p);
-        if (team != null) {
-            team.removeEntity(p);
-        }
-        p.removeScoreboardTag("docs");
-        player_info.put(p, new HPlayerInfo("Default", "Heal"));
-        p.getInventory().addItem(new ItemStack(Material.CLOCK));
     }
 }
