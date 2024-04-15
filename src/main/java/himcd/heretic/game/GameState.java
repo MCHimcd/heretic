@@ -8,6 +8,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Objective;
 
@@ -99,7 +100,14 @@ public final class GameState {
         //给物品,信息
         h.setScoreboard(h_board);
         h.getInventory().addItem(ItemCreator.create(Material.END_PORTAL_FRAME).amount(5).getItem());
-        players.keySet().forEach(p -> p.getInventory().addItem(Skill.getItem(player_info.get(p).skill())));
+        players.forEach((p, hp) -> {
+            hp.role().equip();
+            var inv = p.getInventory();
+            inv.addItem(Skill.getItem(player_info.get(p).skill()), new ItemStack(Material.BREAD, 32));
+            for (var m : new Material[]{Material.IRON_AXE, Material.IRON_PICKAXE, Material.IRON_SHOVEL}) {
+                inv.addItem(ItemCreator.create(m).getItem());
+            }
+        });
     }
 
     //进入二阶段
