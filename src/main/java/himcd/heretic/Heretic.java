@@ -3,7 +3,6 @@ package himcd.heretic;
 import himcd.heretic.command.GetC;
 import himcd.heretic.game.GameListener;
 import himcd.heretic.game.GameState;
-import himcd.heretic.game.HPlayer;
 import himcd.heretic.menu.ChoosePowerMenu;
 import himcd.heretic.menu.MainMenu;
 import himcd.heretic.menu.SlotMenu;
@@ -33,6 +32,7 @@ import java.util.logging.Logger;
 
 import static himcd.heretic.game.GameState.State;
 import static himcd.heretic.game.GameState.state;
+import static himcd.heretic.game.HPlayer.resetPlayer;
 import static himcd.heretic.util.Message.h_board;
 import static himcd.heretic.util.Message.msg;
 
@@ -98,7 +98,7 @@ public final class Heretic extends JavaPlugin implements Listener {
 
     @EventHandler
     void onPlayerJoin(PlayerJoinEvent e) {
-        HPlayer.resetPlayer(e.getPlayer());
+        resetPlayer(e.getPlayer());
     }
 
     @EventHandler
@@ -127,7 +127,7 @@ public final class Heretic extends JavaPlugin implements Listener {
     @EventHandler
     void onClick(InventoryClickEvent e) {
         if (state == State.NONE || state == State.PREPARE) e.setCancelled(true);
-        if (!(e.getWhoClicked() instanceof Player p) || !(e.getInventory().getHolder() instanceof SlotMenu m)) return;
+        if (!(e.getWhoClicked() instanceof Player) || !(e.getInventory().getHolder() instanceof SlotMenu m)) return;
         m.handleClick(e.getSlot());
     }
 

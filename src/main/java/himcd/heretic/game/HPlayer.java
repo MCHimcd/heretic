@@ -4,6 +4,7 @@ import himcd.heretic.Heretic;
 import himcd.heretic.role.Role;
 import himcd.heretic.role.power.Power;
 import himcd.heretic.role.skill.Skill;
+import himcd.heretic.util.ItemCreator;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,10 +13,10 @@ import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static himcd.heretic.Heretic.believerT;
 import static himcd.heretic.Heretic.hereticT;
+import static himcd.heretic.util.Message.msg;
 
 
 public record HPlayer(Player player, Role role, Skill skill, Power power) {
@@ -43,10 +44,6 @@ public record HPlayer(Player player, Role role, Skill skill, Power power) {
         return players.get(player);
     }
 
-    public static List<HPlayer> getPlayers() {
-        return players.values().stream().toList();
-    }
-
     public static void resetPlayer(Player p) {
         p.getInventory().clear();
         p.clearActivePotionEffects();
@@ -57,6 +54,19 @@ public record HPlayer(Player player, Role role, Skill skill, Power power) {
         }
         p.removeScoreboardTag("docs");
         HPlayerInfo.player_info.put(p, new HPlayerInfo("Default", "Heal"));
-        p.getInventory().addItem(new ItemStack(Material.CLOCK));
+        p.getInventory().addItem(ItemCreator.create(Material.CLOCK).name(msg.deserialize("<gold>主菜单")).getItem());
+    }
+
+    public void init() {
+        role.equip();
+        skill.giveItem();
+        if (power != null) {
+            power.giveItem(player);
+        }
+        var inv = player.getInventory();
+        inv.addItem(new ItemStack(Material.BREAD, 6));
+        for (var m : new Material[]{Material.IRON_AXE, Material.IRON_PICKAXE, Material.IRON_SHOVEL}) {
+            inv.addItem(ItemCreator.create(m).getItem());
+        }
     }
 }

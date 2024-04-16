@@ -1,6 +1,5 @@
 package himcd.heretic.game;
 
-import himcd.heretic.role.skill.Heal;
 import himcd.heretic.util.Message;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;

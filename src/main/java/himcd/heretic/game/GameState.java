@@ -1,14 +1,10 @@
 package himcd.heretic.game;
 
 import himcd.heretic.menu.ChoosePowerMenu;
-import himcd.heretic.role.skill.Skill;
-import himcd.heretic.util.ItemCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Objective;
 
@@ -66,7 +62,7 @@ public final class GameState {
         state = State.PREPARE;
     }
 
-    public static void start(Player h, int power) {
+    public static void start(Player h, int power_id) {
         Bukkit.getOnlinePlayers().forEach(p -> {
             p.showBossBar(bar_h);
             p.showBossBar(bar_time);
@@ -74,7 +70,7 @@ public final class GameState {
             p.closeInventory();
         });
         //玩家队伍
-        heretic = new HPlayer(h, player_info.get(h), power);
+        heretic = new HPlayer(h, player_info.get(h), power_id);
         believers.addAll(prepared.stream()
                 .map(player -> new HPlayer(player, player_info.get(player))).toList());
         //随机传送
@@ -99,15 +95,7 @@ public final class GameState {
         }
         //给物品,信息
         h.setScoreboard(h_board);
-        h.getInventory().addItem(ItemCreator.create(Material.END_PORTAL_FRAME).amount(5).getItem());
-        players.forEach((p, hp) -> {
-            hp.role().equip();
-            var inv = p.getInventory();
-            inv.addItem(Skill.getItem(player_info.get(p).skill()), new ItemStack(Material.BREAD, 6));
-            for (var m : new Material[]{Material.IRON_AXE, Material.IRON_PICKAXE, Material.IRON_SHOVEL}) {
-                inv.addItem(ItemCreator.create(m).getItem());
-            }
-        });
+        players.values().forEach(HPlayer::init);
     }
 
     //进入二阶段

@@ -11,6 +11,11 @@ import java.util.function.Consumer;
 
 public class Brave extends Power{
     @Override
+    public void giveItem(Player p) {
+
+    }
+
+    @Override
     public BiConsumer<HPlayer, List<Player>> getBuff1() {
         return (h,ps)->{
             if (ps.size()>=2){

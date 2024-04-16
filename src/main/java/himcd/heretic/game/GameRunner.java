@@ -21,12 +21,8 @@ public final class GameRunner extends BukkitRunnable {
                         .stream().filter(p -> believerT.hasEntity(p)).toList();
                 heretic.power().getBuff1().accept(heretic, ps);
             }
-            case SECOND -> {
-                heretic.power().getBuff2().accept(heretic);
-            }
-            case ENDING -> {
-                players.keySet().forEach(p -> p.damage(0.1));
-            }
+            case SECOND -> heretic.power().getBuff2().accept(heretic);
+            case ENDING -> players.keySet().forEach(p -> p.damage(0.1));
         }
     }
 }

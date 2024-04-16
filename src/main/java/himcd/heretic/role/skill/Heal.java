@@ -1,10 +1,10 @@
 package himcd.heretic.role.skill;
 
-import himcd.heretic.util.Message;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.attribute.Attribute;
+import himcd.heretic.util.ItemCreator;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+
+import static himcd.heretic.util.Message.msg;
 
 public class Heal extends Skill {
     public Heal(Player pl) {
@@ -12,6 +12,10 @@ public class Heal extends Skill {
     }
 
     @Override
-    public void use() {
+    public void giveItem() {
+        player.getInventory().addItem(
+                ItemCreator.create(Material.GOLD_INGOT).name(msg.deserialize("<gold>治疗")).data(3000000).getItem()
+        );
     }
+
 }

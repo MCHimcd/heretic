@@ -1,5 +1,6 @@
 package himcd.heretic.command;
 
+import himcd.heretic.role.Peter;
 import himcd.heretic.role.Role;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,14 +20,14 @@ public class GetC implements CommandExecutor {
         if (S1 < 1) return false;
         if (S.equals("1")) {
             for (int c = S1; c >= 1; c--) {
-                p.getInventory().addItem(Role.getSkillItem(1000000));
+                new Peter(p).equip();
             }
         }
-        if (S.equals("2")){
-            for (int c=S1;c>=1;c--){
-                p.getInventory().addItem(Role.getSkillItem(2000000));
-            }
-        }
+//        if (S.equals("2")){
+//            for (int c=S1;c>=1;c--){
+//                p.getInventory().addItem(Role.getSkillItem(2000000));
+//            }
+//        }
         return true;
     }
 }

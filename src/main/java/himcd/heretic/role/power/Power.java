@@ -22,7 +22,7 @@ public abstract class Power {
 
     //选择菜单里的物品
     public static ItemStack chooseItem(int i) {
-        var it= switch (i) {
+        var it = switch (i) {
             case 1 -> ItemCreator.create(Material.IRON_SWORD).name(msg.deserialize("<red>Brave"));
             case 2 -> ItemCreator.create(Material.SKELETON_SKULL).name(msg.deserialize("<gold>Joker"));
             case 3 -> ItemCreator.create(Material.DIAMOND).name(msg.deserialize("test3"));
@@ -30,6 +30,8 @@ public abstract class Power {
         };
         return it.data(i).getItem();
     }
+
+    public abstract void giveItem(Player p);
 
     //1阶段被动
     public abstract BiConsumer<HPlayer, List<Player>> getBuff1();

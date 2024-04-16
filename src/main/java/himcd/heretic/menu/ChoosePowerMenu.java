@@ -1,7 +1,6 @@
 package himcd.heretic.menu;
 
 import himcd.heretic.role.power.Power;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,7 +11,6 @@ import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
 
-import static himcd.heretic.Heretic.logger;
 import static himcd.heretic.TickRunner.chooseMenu;
 import static himcd.heretic.game.GameState.start;
 import static himcd.heretic.util.Message.msg;

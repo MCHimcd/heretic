@@ -1,17 +1,18 @@
 package himcd.heretic;
 
-import himcd.heretic.game.GameListener;
 import himcd.heretic.game.HPlayer;
 import himcd.heretic.menu.ChoosePowerMenu;
 import himcd.heretic.menu.MainMenu;
 import net.kyori.adventure.bossbar.BossBar;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.GameMode;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.stream.Collectors;
 
-import static himcd.heretic.Heretic.logger;
 import static himcd.heretic.game.GameState.*;
 import static himcd.heretic.game.HPlayer.believers;
 import static himcd.heretic.game.HPlayer.heretic;
