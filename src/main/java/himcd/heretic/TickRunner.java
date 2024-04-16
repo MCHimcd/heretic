@@ -30,12 +30,16 @@ public final class TickRunner extends BukkitRunnable {
         if (chooseMenu != null) chooseMenu.tick();
         //信息显示
         switch (state) {
-            case NONE -> send_actionbar(msg.deserialize("距离游戏开始：%s 未准备玩家：%s".formatted(
-                    prepareTime == -1 ? "Null" : (prepareTime + 20) / 20,
-                    Bukkit.getOnlinePlayers().stream()
-                            .filter(p -> p.getGameMode() == GameMode.ADVENTURE && !MainMenu.prepared.contains(p))
-                            .map(Player::getName).collect(Collectors.joining(","))
-            )));
+            case NONE -> {
+                var ps = Bukkit.getOnlinePlayers().stream()
+                        .filter(p -> p.getGameMode() == GameMode.ADVENTURE && !MainMenu.prepared.contains(p));
+                beforeStart(msg.deserialize("%s %s".formatted(
+                        prepareTime == -1 ? "人数过少" : "距离游戏开始：%s".formatted((prepareTime + 20) / 20),
+                        ps.findAny().isPresent() ?
+                                "未准备玩家：" + ps.map(Player::getName).collect(Collectors.joining(","))
+                                : ""
+                )));
+            }
             case FIRST, SECOND -> {
                 //BossBar显示
                 if (state == State.FIRST) {

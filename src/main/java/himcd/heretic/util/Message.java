@@ -4,6 +4,7 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.LinkedList;
@@ -21,7 +22,10 @@ public class Message {
         return sl.stream().map(msg::deserialize).collect(Collectors.toCollection(LinkedList::new));
     }
 
-    public static void send_actionbar(Component msg) {
-        Bukkit.getOnlinePlayers().forEach(player -> player.sendActionBar(msg));
+    public static void beforeStart(Component msg) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendActionBar(msg);
+            player.setFoodLevel(20);
+        }
     }
 }

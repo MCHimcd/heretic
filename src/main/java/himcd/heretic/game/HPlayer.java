@@ -7,6 +7,7 @@ import himcd.heretic.role.skill.Skill;
 import himcd.heretic.util.ItemCreator;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
