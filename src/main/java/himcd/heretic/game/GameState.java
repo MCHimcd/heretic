@@ -103,7 +103,7 @@ public final class GameState {
         players.forEach((p, hp) -> {
             hp.role().equip();
             var inv = p.getInventory();
-            inv.addItem(Skill.getItem(player_info.get(p).skill()), new ItemStack(Material.BREAD, 32));
+            inv.addItem(Skill.getItem(player_info.get(p).skill()), new ItemStack(Material.BREAD, 6));
             for (var m : new Material[]{Material.IRON_AXE, Material.IRON_PICKAXE, Material.IRON_SHOVEL}) {
                 inv.addItem(ItemCreator.create(m).getItem());
             }

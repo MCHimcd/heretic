@@ -27,9 +27,9 @@ public class ChoosePowerMenu extends SlotMenu {
         Collections.shuffle(ids);
         //物品
         BiConsumer<ItemStack, Player> f = (i, p) -> start(p, i.getItemMeta().getCustomModelData());
-        setSlot(2, Power.chooseItem(ids.getFirst()), f);
-        setSlot(4, Power.chooseItem(ids.get(1)), f);
-        setSlot(6, Power.chooseItem(ids.get(2)), f);
+        setSlot(0, Power.chooseItem(ids.getFirst()), f);
+        setSlot(1, Power.chooseItem(ids.get(1)), f);
+        setSlot(2, Power.chooseItem(ids.get(2)), f);
     }
 
     public void tick() {

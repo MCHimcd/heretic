@@ -1,5 +1,6 @@
 package himcd.heretic.role.skill;
 
+import himcd.heretic.role.Role;
 import himcd.heretic.util.ItemCreator;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -22,7 +23,7 @@ public abstract class Skill {
 
     public static ItemStack getItem(String name) {
         return switch (name) {
-            case "heal" -> ItemCreator.create(Material.GOLD_INGOT).name(msg.deserialize("<gold>治疗")).getItem();
+            case "Heal" -> Role.getSkillItem(3000000);
             default -> new ItemStack(Material.AIR);
         };
     }

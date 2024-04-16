@@ -15,16 +15,16 @@ import static himcd.heretic.util.Message.msg;
 public abstract class Power {
     public static Power of(int id) {
         return switch (id) {
-            case 1, 2, 3 -> new Test();
-            default -> new Test();
+            case 1, 2, 3 -> new Brave();
+            default -> new Brave();
         };
     }
 
     //选择菜单里的物品
     public static ItemStack chooseItem(int i) {
         var it= switch (i) {
-            case 1 -> ItemCreator.create(Material.DIAMOND).name(msg.deserialize("test1"));
-            case 2 -> ItemCreator.create(Material.DIAMOND).name(msg.deserialize("test2"));
+            case 1 -> ItemCreator.create(Material.IRON_SWORD).name(msg.deserialize("<red>Brave"));
+            case 2 -> ItemCreator.create(Material.SKELETON_SKULL).name(msg.deserialize("<gold>Joker"));
             case 3 -> ItemCreator.create(Material.DIAMOND).name(msg.deserialize("test3"));
             default -> ItemCreator.create(Material.AIR);
         };

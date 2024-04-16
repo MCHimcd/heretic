@@ -1,6 +1,9 @@
 package himcd.heretic.game;
 
+import himcd.heretic.role.skill.Heal;
+import himcd.heretic.util.Message;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -131,7 +134,7 @@ public final class GameListener implements Listener {
                         if (t >= 10) {
                             user.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, location1, 10, 1, 1, 1, null);
                             user.getWorld().spawnParticle(Particle.SMOKE_NORMAL, location1, 500, 0.5, 0.5, 0.5, 0.1, null, true);
-                            location1.getNearbyPlayers(3, player -> !player.equals(user) && player.getGameMode() == GameMode.ADVENTURE)
+                            location1.getNearbyPlayers(3, player -> !player.equals(user))
                                     .forEach(player -> {
                                         player.setVelocity(AtoB(location1, player.getLocation()).setY(0.5));
                                         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 1, true));
@@ -193,14 +196,18 @@ public final class GameListener implements Listener {
                         if (t >= 40) {
                             user.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, location1, 10, 1, 1, 1, null);
                             user.getWorld().spawnParticle(Particle.SMOKE_NORMAL, location1, 500, 0.5, 0.5, 0.5, 0.1, null, true);
-                            location1.getNearbyPlayers(3, player -> !player.equals(user) && player.getGameMode() == GameMode.ADVENTURE)
+                            location1.getNearbyPlayers(3, player -> !player.equals(user))
                                     .forEach(player -> player.damage(3, user));
                             popian(location1.clone(), user);
                             popian(location1.clone(), user);
                             popian(location1.clone(), user);
                             popian(location1.clone(), user);
                             popian(location1.clone(), user);
-
+                            popian(location1.clone(), user);
+                            popian(location1.clone(), user);
+                            popian(location1.clone(), user);
+                            popian(location1.clone(), user);
+                            popian(location1.clone(), user);
 
                             user.getWorld().playSound(location1, Sound.ENTITY_GENERIC_EXPLODE, .5f, 3f);
                             item1.remove();
@@ -213,6 +220,28 @@ public final class GameListener implements Listener {
                         }
                     }
                 }.runTaskTimer(plugin, 0, 1);
+            }
+            case 2000001->{
+
+            }
+            case 3000000->{
+                //治疗
+                double health = user.getHealth();
+                double max = user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+                double a = max - health;
+                if (a >= 8) {
+                    item.setAmount(item.getAmount() - 1);
+                    user.setHealth(health + 8);
+                    user.playSound(user, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0, 1);
+                    user.spawnParticle(Particle.VILLAGER_HAPPY, user.getLocation().add(0, 1, 0), 100, 0.4, 0.5, 0.4, 0.1);
+                } else if (a > 0) {
+                    item.setAmount(item.getAmount() - 1);
+                    user.setHealth(health + a);
+                    user.playSound(user, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0, 1);
+                    user.spawnParticle(Particle.VILLAGER_HAPPY, user.getLocation().add(0, 1, 0), 100, 0.4, 0.5, 0.4, 0.1);
+                } else {
+                    user.sendMessage(Message.msg.deserialize("<gold>[System] 满血不可使用."));
+                }
             }
         }
     }
@@ -256,7 +285,7 @@ public final class GameListener implements Listener {
             p.getWorld().spawnParticle(Particle.END_ROD, l, 1, 0, 0, 0, 0, null, true);
             double t1 = t * 0.05;
             l.subtract(0, t1, 0);
-            l.getNearbyPlayers(3, player -> !player.equals(p) && player.getGameMode() == GameMode.ADVENTURE)
+            l.getNearbyPlayers(3, player -> !player.equals(p))
                     .forEach(player -> {
                         player.damage(3, player);
                         l.multiply(0);

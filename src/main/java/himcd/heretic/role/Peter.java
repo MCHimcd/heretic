@@ -16,7 +16,7 @@ public class Peter extends Role {
 
     @Override
     public void equip() {
-        var names = Message.convertMsg(List.of("test"));
+        var names = Message.convertMsg(List.of("Peter"));
         RoleEquip.of(p)
                 .helmet(ItemCreator.create(Material.SKELETON_SKULL)
                         .name(names.pop())

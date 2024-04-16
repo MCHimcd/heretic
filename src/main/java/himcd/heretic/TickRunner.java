@@ -1,13 +1,11 @@
 package himcd.heretic;
 
+import himcd.heretic.game.GameListener;
 import himcd.heretic.game.HPlayer;
 import himcd.heretic.menu.ChoosePowerMenu;
 import himcd.heretic.menu.MainMenu;
 import net.kyori.adventure.bossbar.BossBar;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.GameMode;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -54,10 +52,10 @@ public final class TickRunner extends BukkitRunnable {
                     bar_time.name(msg.deserialize("<gold>剩余时间：<aqua>%d".formatted((24000 - gameTime) / 20)));
                     portal_frame.forEach(l -> {
                         heretic.player().spawnParticle(Particle.END_ROD, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 1, 0.5), 10, 0, 10, 0, 0);
-                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0, 0.1, 0, 0, 5);
-                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0, -0.1, 0, 0, 5);
-                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0, 0, 0, 0.1, 5);
-                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0, 0, 0, -0.1, 5);
+                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0, 0.5, 0, 0, 5);
+                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0, -0.5, 0, 0, 5);
+                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0, 0, 0, 0.5, 5);
+                        heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0, 0, 0, -0.5, 5);
                         heretic.player().spawnParticle(Particle.DUST_COLOR_TRANSITION, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 30, 0.3, 0.3, 0.3, 0.5, new Particle.DustTransition(Color.BLUE, Color.AQUA, 1));
                     });
                 } else {
