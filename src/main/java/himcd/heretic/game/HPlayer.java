@@ -5,15 +5,17 @@ import himcd.heretic.role.Role;
 import himcd.heretic.role.power.Power;
 import himcd.heretic.role.skill.Skill;
 import himcd.heretic.util.ItemCreator;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static himcd.heretic.Heretic.believerT;
 import static himcd.heretic.Heretic.hereticT;
@@ -24,6 +26,7 @@ public record HPlayer(Player player, Role role, Skill skill, Power power) {
     public static final ArrayList<HPlayer> believers = new ArrayList<>();
     public static HashMap<Player, HPlayer> players = new HashMap<>();
     public static HPlayer heretic;
+    public static List<ScheduledTask> tasks = new ArrayList<>();
 
     public HPlayer(Player player, HPlayerInfo info) {
         this(player, Role.of(player, info.role()), Skill.of(player, info.skill()), null);
@@ -61,10 +64,10 @@ public record HPlayer(Player player, Role role, Skill skill, Power power) {
     public void init() {
         role.equip();
         skill.giveItem();
-        if (power != null) {
-            power.giveItem(player);
-        }
         var inv = player.getInventory();
+        if (power != null) {
+            inv.addItem(power.getItem(),ItemCreator.create(Material.END_PORTAL_FRAME).amount(5).getItem());
+        }
         inv.addItem(new ItemStack(Material.BREAD, 6));
 //        for (var m : new Material[]{Material.IRON_AXE, Material.IRON_PICKAXE, Material.IRON_SHOVEL}) {
 //            inv.addItem(ItemCreator.create(m).getItem());

@@ -1,6 +1,6 @@
 package himcd.heretic.game;
 
-import himcd.heretic.Heretic;
+import himcd.heretic.role.power.Joker;
 import himcd.heretic.util.ItemCreator;
 import himcd.heretic.util.Message;
 import org.bukkit.*;
@@ -29,11 +29,12 @@ import java.util.Random;
 import static himcd.heretic.Heretic.*;
 import static himcd.heretic.game.GameState.*;
 import static himcd.heretic.game.HPlayer.heretic;
-import static himcd.heretic.game.HPlayer.players;
+import static himcd.heretic.game.HPlayer.tasks;
 import static himcd.heretic.util.Message.h_board;
 import static himcd.heretic.util.Message.msg;
 
 public final class GameListener implements Listener {
+
     public static void circle(double r, Player p, Location a) {
         for (double degree = 0; degree < 360; degree++) {
             double rd = Math.toRadians(degree);
@@ -67,7 +68,7 @@ public final class GameListener implements Listener {
 
     @SuppressWarnings("UnstableApiUsage")
     @EventHandler
-    void onDeath(EntityDamageByEntityEvent e) {
+    static void onDeath(EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof Player hurt)) return;
         //检测死亡
         var damage = e.getFinalDamage();
@@ -112,159 +113,167 @@ public final class GameListener implements Listener {
         if (item == null || !item.getItemMeta().hasCustomModelData()) return;
         var id = item.getItemMeta().getCustomModelData();
         switch (id) {
-            case 1000000 -> {
-                //引力手雷
-                e.setCancelled(true);
-                item.setAmount(item.getAmount() - 1);
-                Vector normalize = user.getLocation().getDirection().normalize();
-                if (user.isSneaking()) {
-                    normalize.multiply(1).setY(0.1);
-                } else {
-                    normalize.multiply(2);
-                }
-                Location location = user.getEyeLocation();
-                Item item1 = (Item) user.getWorld().spawnEntity(location, EntityType.DROPPED_ITEM);
-                item1.setItemStack(new ItemStack(Material.IRON_BLOCK));
-                item(item1, user);
-                item1.setVelocity(normalize);
-                new BukkitRunnable() {
-                    int t = 0;
-
-                    @Override
-                    public void run() {
-                        Location location1 = item1.getLocation();
-                        if (t >= 10) {
-                            user.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, location1, 10, 1, 1, 1, null);
-                            user.getWorld().spawnParticle(Particle.SMOKE_NORMAL, location1, 500, 0.5, 0.5, 0.5, 0.1, null, true);
-                            location1.getNearbyPlayers(3, player -> !player.equals(user))
-                                    .forEach(player -> {
-                                        player.setVelocity(AtoB(location1, player.getLocation()).setY(0.5));
-                                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 1, true));
-                                        player.damage(3, user);
-                                    });
-                            user.getWorld().playSound(location1, Sound.ENTITY_GENERIC_EXPLODE, .5f, 3f);
-                            new BukkitRunnable() {
-                                final int maxR = 0;
-                                double radius = 3;
-
-                                @Override
-                                public void run() {
-                                    if (radius < maxR) {
-                                        cancel();
-                                        return;
-                                    }
-                                    for (double theta = 0; theta < Math.PI * 2; theta += Math.PI / 180) {
-                                        double x = location1.getX() + radius * Math.cos(theta);
-                                        double z = location1.getZ() + radius * Math.sin(theta);
-                                        Location particleLocation = new Location(user.getWorld(), x, location1.getY(), z);
-                                        user.getWorld().spawnParticle(Particle.REDSTONE, particleLocation, 1,
-                                                0, 0, 0, 0, new Particle.DustOptions(Color.AQUA, 1f));
-                                    }
-                                    radius -= 0.6;
-                                }
-                            }.runTaskTimer(plugin, 0, 1);
-                            item1.remove();
-                            cancel();
-                        } else {
-                            t++;
-                            item1.customName(msg.deserialize("<gold> %s".formatted(t)));
-                            item1.setCustomNameVisible(true);
-                            user.getWorld().spawnParticle(Particle.FLAME, location1, 5, 0.1, 0.1, 0.1, 0.05, null, true);
-                        }
-                    }
-                }.runTaskTimer(plugin, 0, 1);
-            }
-            case 2000000 -> {
-                //破片手雷
-                e.setCancelled(true);
-                item.setAmount(item.getAmount() - 1);
-                Vector normalize = user.getLocation().getDirection().normalize();
-                if (user.isSneaking()) {
-                    normalize.multiply(1).setY(0.5);
-                } else {
-                    normalize.multiply(2);
-                }
-                Location location = user.getEyeLocation();
-                Item item1 = (Item) user.getWorld().spawnEntity(location, EntityType.DROPPED_ITEM);
-                item1.setItemStack(new ItemStack(Material.IRON_INGOT));
-                item(item1, user);
-                item1.setVelocity(normalize);
-                new BukkitRunnable() {
-                    int t = 0;
-
-                    @Override
-                    public void run() {
-                        Location location1 = item1.getLocation();
-                        if (t >= 40) {
-                            user.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, location1, 10, 1, 1, 1, null);
-                            user.getWorld().spawnParticle(Particle.SMOKE_NORMAL, location1, 500, 0.5, 0.5, 0.5, 0.1, null, true);
-                            location1.getNearbyPlayers(3, player -> !player.equals(user))
-                                    .forEach(player -> player.damage(3, user));
-                            popian(location1.clone(), user);
-                            popian(location1.clone(), user);
-                            popian(location1.clone(), user);
-                            popian(location1.clone(), user);
-                            popian(location1.clone(), user);
-                            popian(location1.clone(), user);
-                            popian(location1.clone(), user);
-                            popian(location1.clone(), user);
-                            popian(location1.clone(), user);
-                            popian(location1.clone(), user);
-
-                            user.getWorld().playSound(location1, Sound.ENTITY_GENERIC_EXPLODE, .5f, 3f);
-                            item1.remove();
-                            cancel();
-                        } else {
-                            t++;
-                            item1.customName(msg.deserialize("<gold> %s".formatted(t)));
-                            item1.setCustomNameVisible(true);
-                            user.getWorld().spawnParticle(Particle.CRIT, location1, t, 0.1, 0.1, 0.1, 0.05 * t, null, true);
-                        }
-                    }
-                }.runTaskTimer(plugin, 0, 1);
-            }
-            case 2000001->{
-                //Joker-1
-                e.setCancelled(true);
-                item.setAmount(item.getAmount() - 1);
-                JokerLoc=user.getLocation();
-                Jokeruser=user.getPlayer();
-                user.spawnParticle(Particle.SMOKE_LARGE,user.getLocation(),100,0.5,0.5,0.5,0.5);
-                new BukkitRunnable(){
-
-                    @Override
-                    public void run() {
-                        user.getInventory().addItem(ItemCreator.create(Material.SLIME_BALL).name(msg.deserialize("<gray>欺诈宝珠[ <red>返</red> ]")).data(2000002).getItem());
-                    }
-                }.runTaskLater(plugin,20);
-            }
-            case 2000002->{
-                //Joker-2
-                e.setCancelled(true);
-                item.setAmount(item.getAmount() - 1);
-                user.spawnParticle(Particle.SMOKE_LARGE,user.getLocation(),100,0.5,0.5,0.5,0.5);
-                user.teleport(JokerLoc);
-            }
-            case 3000000->{
-                //治疗
-                double health = user.getHealth();
-                double max = user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-                double a = max - health;
-                if (a >= 8) {
-                    item.setAmount(item.getAmount() - 1);
-                    user.setHealth(health + 8);
-                    user.playSound(user, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0, 1);
-                    user.spawnParticle(Particle.VILLAGER_HAPPY, user.getLocation().add(0, 1, 0), 100, 0.4, 0.5, 0.4, 0.1);
-                } else if (a > 0) {
-                    item.setAmount(item.getAmount() - 1);
-                    user.setHealth(health + a);
-                    user.playSound(user, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0, 1);
-                    user.spawnParticle(Particle.VILLAGER_HAPPY, user.getLocation().add(0, 1, 0), 100, 0.4, 0.5, 0.4, 0.1);
-                } else {
-                    user.sendMessage(Message.msg.deserialize("<gold>[System] 满血不可使用."));
-                }
-            }
+            case 1000000 -> peter1(e, item, user);
+            case 2000000 -> peter2(e, item, user);
+            case 2000001 -> joker1(e, item, user);
+            case 2000002 -> joker2(e, item, user);
+            case 3000000 -> heal(user, item);
         }
+    }
+
+    private static void heal(Player user, ItemStack item) {
+        //治疗
+        double health = user.getHealth();
+        double max = user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+        double a = max - health;
+        if (a >= 8) {
+            item.setAmount(item.getAmount() - 1);
+            user.setHealth(health + 8);
+            user.playSound(user, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0, 1);
+            user.spawnParticle(Particle.VILLAGER_HAPPY, user.getLocation().add(0, 1, 0), 100, 0.4, 0.5, 0.4, 0.1);
+        } else if (a > 0) {
+            item.setAmount(item.getAmount() - 1);
+            user.setHealth(health + a);
+            user.playSound(user, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0, 1);
+            user.spawnParticle(Particle.VILLAGER_HAPPY, user.getLocation().add(0, 1, 0), 100, 0.4, 0.5, 0.4, 0.1);
+        } else {
+            user.sendMessage(Message.msg.deserialize("<gold>[System] 满血不可使用."));
+        }
+    }
+
+    private void peter1(PlayerInteractEvent e, ItemStack item, Player user) {
+        //引力手雷
+        e.setCancelled(true);
+        item.setAmount(item.getAmount() - 1);
+        Vector normalize = user.getLocation().getDirection().normalize();
+        if (user.isSneaking()) {
+            normalize.multiply(1).setY(0.1);
+        } else {
+            normalize.multiply(2);
+        }
+        Location location = user.getEyeLocation();
+        Item item1 = (Item) user.getWorld().spawnEntity(location, EntityType.DROPPED_ITEM);
+        item1.setItemStack(new ItemStack(Material.IRON_BLOCK));
+        item(item1, user);
+        item1.setVelocity(normalize);
+        new BukkitRunnable() {
+            int t = 0;
+
+            @Override
+            public void run() {
+                Location location1 = item1.getLocation();
+                if (t >= 10) {
+                    user.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, location1, 10, 1, 1, 1, null);
+                    user.getWorld().spawnParticle(Particle.SMOKE_NORMAL, location1, 500, 0.5, 0.5, 0.5, 0.1, null, true);
+                    location1.getNearbyPlayers(3, player -> !player.equals(user))
+                            .forEach(player -> {
+                                player.setVelocity(AtoB(location1, player.getLocation()).setY(0.5));
+                                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 1, true));
+                                player.damage(3, user);
+                            });
+                    user.getWorld().playSound(location1, Sound.ENTITY_GENERIC_EXPLODE, .5f, 3f);
+                    new BukkitRunnable() {
+                        final int maxR = 0;
+                        double radius = 3;
+
+                        @Override
+                        public void run() {
+                            if (radius < maxR) {
+                                cancel();
+                                return;
+                            }
+                            for (double theta = 0; theta < Math.PI * 2; theta += Math.PI / 180) {
+                                double x = location1.getX() + radius * Math.cos(theta);
+                                double z = location1.getZ() + radius * Math.sin(theta);
+                                Location particleLocation = new Location(user.getWorld(), x, location1.getY(), z);
+                                user.getWorld().spawnParticle(Particle.REDSTONE, particleLocation, 1,
+                                        0, 0, 0, 0, new Particle.DustOptions(Color.AQUA, 1f));
+                            }
+                            radius -= 0.6;
+                        }
+                    }.runTaskTimer(plugin, 0, 1);
+                    item1.remove();
+                    cancel();
+                } else {
+                    t++;
+                    item1.customName(msg.deserialize("<gold> %s".formatted(t)));
+                    item1.setCustomNameVisible(true);
+                    user.getWorld().spawnParticle(Particle.FLAME, location1, 5, 0.1, 0.1, 0.1, 0.05, null, true);
+                }
+            }
+        }.runTaskTimer(plugin, 0, 1);
+    }
+
+    private void peter2(PlayerInteractEvent e, ItemStack item, Player user) {
+        //破片手雷
+        e.setCancelled(true);
+        item.setAmount(item.getAmount() - 1);
+        Vector normalize = user.getLocation().getDirection().normalize();
+        if (user.isSneaking()) {
+            normalize.multiply(1).setY(0.5);
+        } else {
+            normalize.multiply(2);
+        }
+        Location location = user.getEyeLocation();
+        Item item1 = (Item) user.getWorld().spawnEntity(location, EntityType.DROPPED_ITEM);
+        item1.setItemStack(new ItemStack(Material.IRON_INGOT));
+        item(item1, user);
+        item1.setVelocity(normalize);
+        new BukkitRunnable() {
+            int t = 0;
+
+            @Override
+            public void run() {
+                Location location1 = item1.getLocation();
+                if (t >= 40) {
+                    user.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, location1, 10, 1, 1, 1, null);
+                    user.getWorld().spawnParticle(Particle.SMOKE_NORMAL, location1, 500, 0.5, 0.5, 0.5, 0.1, null, true);
+                    location1.getNearbyPlayers(3, player -> !player.equals(user))
+                            .forEach(player -> player.damage(3, user));
+                    popian(location1.clone(), user);
+                    popian(location1.clone(), user);
+                    popian(location1.clone(), user);
+                    popian(location1.clone(), user);
+                    popian(location1.clone(), user);
+                    popian(location1.clone(), user);
+                    popian(location1.clone(), user);
+                    popian(location1.clone(), user);
+                    popian(location1.clone(), user);
+                    popian(location1.clone(), user);
+
+                    user.getWorld().playSound(location1, Sound.ENTITY_GENERIC_EXPLODE, .5f, 3f);
+                    item1.remove();
+                    cancel();
+                } else {
+                    t++;
+                    item1.customName(msg.deserialize("<gold> %s".formatted(t)));
+                    item1.setCustomNameVisible(true);
+                    user.getWorld().spawnParticle(Particle.CRIT, location1, t, 0.1, 0.1, 0.1, 0.05 * t, null, true);
+                }
+            }
+        }.runTaskTimer(plugin, 0, 1);
+    }
+
+    private static void joker2(PlayerInteractEvent e, ItemStack item, Player user) {
+        //Joker-2
+        e.setCancelled(true);
+        item.setAmount(item.getAmount() - 1);
+        user.spawnParticle(Particle.SMOKE_LARGE, user.getLocation(), 100, 0.5, 0.5, 0.5, 0.5);
+        user.teleport(Joker.JokerLoc);
+    }
+
+    private static void joker1(PlayerInteractEvent e, ItemStack item, Player user) {
+        //Joker-1
+        e.setCancelled(true);
+        item.setAmount(item.getAmount() - 1);
+        Joker.JokerLoc = user.getLocation();
+        Joker.JokerUser = user.getPlayer();
+        user.spawnParticle(Particle.SMOKE_LARGE, user.getLocation(), 100, 0.5, 0.5, 0.5, 0.5);
+        tasks.add(user.getScheduler().runDelayed(
+                plugin,
+                t -> user.getInventory().addItem(ItemCreator.create(Material.SLIME_BALL).name(msg.deserialize("<gray>欺诈宝珠[ <red>返</red> ]")).data(2000002).getItem()),
+                null, 20
+        ));
     }
 
     public void armor_stand(ArmorStand entity) {
@@ -287,13 +296,6 @@ public final class GameListener implements Listener {
         return B.clone().subtract(A).toVector().normalize();
     }
 
-    private void endGame(Player winner) {
-        if (winner != null) {
-            Bukkit.broadcast(msg.deserialize("<gold>胜利者：<reset>%s".formatted(winner.getName())));
-        }
-        reset();
-    }
-
     public void popian(Location l, Player p) {
         Random random = new Random();
         double x = l.getX() + (random.nextDouble() - 0.5) * 20;
@@ -314,6 +316,4 @@ public final class GameListener implements Listener {
         }
 
     }
-    static Location JokerLoc=null;
-    static Player Jokeruser=null;
 }

@@ -2,6 +2,7 @@ package himcd.heretic.role.power;
 
 import himcd.heretic.game.HPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -10,9 +11,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class Brave extends Power{
-    @Override
-    public void giveItem(Player p) {
 
+    @Override
+    public ItemStack getItem() {
+        return null;
     }
 
     @Override

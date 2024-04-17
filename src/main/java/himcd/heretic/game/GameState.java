@@ -1,12 +1,10 @@
 package himcd.heretic.game;
 
 import himcd.heretic.menu.ChoosePowerMenu;
-import himcd.heretic.role.power.Joker;
-import himcd.heretic.util.ItemCreator;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Objective;
@@ -45,6 +43,8 @@ public final class GameState {
         players.clear();
         prepared.clear();
         portal_frame.clear();
+        tasks.forEach(ScheduledTask::cancel);
+        tasks.clear();
         chooseMenu = null;
         player_info.clear();
         Bukkit.getOnlinePlayers().forEach(p -> {
@@ -99,7 +99,6 @@ public final class GameState {
         //给物品,信息
         h.setScoreboard(h_board);
         players.values().forEach(HPlayer::init);
-        h.getInventory().addItem(ItemCreator.create(Material.END_PORTAL_FRAME).amount(5).getItem());
     }
 
     //进入二阶段
@@ -122,6 +121,14 @@ public final class GameState {
             p.hideBossBar(bar_time);
             p.sendMessage(msg.deserialize("<gold>[test]<white>死斗"));
         });
+    }
+
+    //结束游戏
+    public static void endGame(Player winner) {
+        if (winner != null) {
+            Bukkit.broadcast(msg.deserialize("<gold>胜利者：<reset>%s".formatted(winner.getName())));
+        }
+        reset();
     }
 
     public enum State {

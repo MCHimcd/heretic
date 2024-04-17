@@ -32,7 +32,7 @@ public abstract class Power {
         return it.data(i).getItem();
     }
 
-    public abstract void giveItem(Player p);
+    public abstract ItemStack getItem();
 
     //1阶段被动
     public abstract BiConsumer<HPlayer, List<Player>> getBuff1();
