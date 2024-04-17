@@ -230,7 +230,13 @@ public final class GameListener implements Listener {
                 JokerLoc=user.getLocation();
                 Jokeruser=user.getPlayer();
                 user.spawnParticle(Particle.SMOKE_LARGE,user.getLocation(),100,0.5,0.5,0.5,0.5);
-                user.getInventory().addItem(ItemCreator.create(Material.SLIME_BALL).name(msg.deserialize("<gray>欺诈宝珠[ <red>返</red> ]")).data(2000002).getItem());
+                new BukkitRunnable(){
+
+                    @Override
+                    public void run() {
+                        user.getInventory().addItem(ItemCreator.create(Material.SLIME_BALL).name(msg.deserialize("<gray>欺诈宝珠[ <red>返</red> ]")).data(2000002).getItem());
+                    }
+                }.runTaskLater(plugin,20);
             }
             case 2000002->{
                 //Joker-2

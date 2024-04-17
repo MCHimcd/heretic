@@ -1,5 +1,6 @@
 package himcd.heretic.command;
 
+import himcd.heretic.CustomTerrainGenerator;
 import himcd.heretic.role.Peter;
 import himcd.heretic.role.Role;
 import org.bukkit.command.Command;
@@ -16,12 +17,11 @@ public class GetC implements CommandExecutor {
             return false;
         }
         String S = args[0];
-        int S1 = Integer.parseInt(args[1]);
-        if (S1 < 1) return false;
         if (S.equals("1")) {
-            for (int c = S1; c >= 1; c--) {
                 new Peter(p).equip();
-            }
+        }
+        if (S.equals("2")){
+            CustomTerrainGenerator.generateTerrain(p.getWorld(),0,0);
         }
 //        if (S.equals("2")){
 //            for (int c=S1;c>=1;c--){

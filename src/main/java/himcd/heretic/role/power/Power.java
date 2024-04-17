@@ -15,7 +15,8 @@ import static himcd.heretic.util.Message.msg;
 public abstract class Power {
     public static Power of(int id) {
         return switch (id) {
-            case 1, 2, 3 -> new Brave();
+            case 1, 3 -> new Brave();
+            case 2->new Joker();
             default -> new Brave();
         };
     }

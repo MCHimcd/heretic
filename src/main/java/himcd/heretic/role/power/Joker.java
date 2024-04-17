@@ -18,15 +18,13 @@ public class Joker extends Power{
 
     @Override
     public void giveItem(Player p) {
-
+        p.getInventory().addItem(ItemCreator.create(Material.SLIME_BALL).name(msg.deserialize("<gray>欺诈宝珠[ <red>存</red> ]")).data(2000001).getItem());
     }
 
     @Override
     public BiConsumer<HPlayer, List<Player>> getBuff1() {
         return (hPlayer, players) -> {
-            if (!Given){
-                ItemCreator.create(Material.SLIME_BALL).name(msg.deserialize("<gray>欺诈宝珠[ <red>存</red> ]")).data(2000001);
-            }
+
         };
     }
 

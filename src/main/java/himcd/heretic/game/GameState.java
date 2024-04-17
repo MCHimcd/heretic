@@ -2,9 +2,11 @@ package himcd.heretic.game;
 
 import himcd.heretic.menu.ChoosePowerMenu;
 import himcd.heretic.role.power.Joker;
+import himcd.heretic.util.ItemCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Objective;
@@ -97,6 +99,7 @@ public final class GameState {
         //给物品,信息
         h.setScoreboard(h_board);
         players.values().forEach(HPlayer::init);
+        h.getInventory().addItem(ItemCreator.create(Material.END_PORTAL_FRAME).amount(5).getItem());
     }
 
     //进入二阶段
@@ -105,7 +108,7 @@ public final class GameState {
         state = State.SECOND;
         Bukkit.getOnlinePlayers().forEach(p -> {
             p.hideBossBar(bar_h);
-            p.sendMessage(msg.deserialize("<gold>[test]<white>二阶段"));
+            p.sendMessage(msg.deserialize("<gold>[System] <white>坐标上传完毕,进入二阶段."));
         });
         gameTime = 24001;
     }

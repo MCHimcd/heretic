@@ -66,7 +66,10 @@ public record HPlayer(Player player, Role role, Skill skill, Power power) {
         }
         var inv = player.getInventory();
         inv.addItem(new ItemStack(Material.BREAD, 6));
-        for (var m : new Material[]{Material.IRON_AXE, Material.IRON_PICKAXE, Material.IRON_SHOVEL}) {
+//        for (var m : new Material[]{Material.IRON_AXE, Material.IRON_PICKAXE, Material.IRON_SHOVEL}) {
+//            inv.addItem(ItemCreator.create(m).getItem());
+//        }
+        for (var m : new Material[]{Material.IRON_AXE}) {
             inv.addItem(ItemCreator.create(m).getItem());
         }
     }
