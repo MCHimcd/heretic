@@ -1,6 +1,7 @@
 package himcd.heretic.game;
 
 import himcd.heretic.menu.ChoosePowerMenu;
+import himcd.heretic.role.power.Joker;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;

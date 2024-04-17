@@ -1,5 +1,7 @@
 package himcd.heretic.game;
 
+import himcd.heretic.Heretic;
+import himcd.heretic.util.ItemCreator;
 import himcd.heretic.util.Message;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -27,6 +29,7 @@ import java.util.Random;
 import static himcd.heretic.Heretic.*;
 import static himcd.heretic.game.GameState.*;
 import static himcd.heretic.game.HPlayer.heretic;
+import static himcd.heretic.game.HPlayer.players;
 import static himcd.heretic.util.Message.h_board;
 import static himcd.heretic.util.Message.msg;
 
@@ -221,7 +224,20 @@ public final class GameListener implements Listener {
                 }.runTaskTimer(plugin, 0, 1);
             }
             case 2000001->{
-
+                //Joker-1
+                e.setCancelled(true);
+                item.setAmount(item.getAmount() - 1);
+                JokerLoc=user.getLocation();
+                Jokeruser=user.getPlayer();
+                user.spawnParticle(Particle.SMOKE_LARGE,user.getLocation(),100,0.5,0.5,0.5,0.5);
+                user.getInventory().addItem(ItemCreator.create(Material.SLIME_BALL).name(msg.deserialize("<gray>欺诈宝珠[ <red>返</red> ]")).data(2000002).getItem());
+            }
+            case 2000002->{
+                //Joker-2
+                e.setCancelled(true);
+                item.setAmount(item.getAmount() - 1);
+                user.spawnParticle(Particle.SMOKE_LARGE,user.getLocation(),100,0.5,0.5,0.5,0.5);
+                user.teleport(JokerLoc);
             }
             case 3000000->{
                 //治疗
@@ -292,4 +308,6 @@ public final class GameListener implements Listener {
         }
 
     }
+    static Location JokerLoc=null;
+    static Player Jokeruser=null;
 }
