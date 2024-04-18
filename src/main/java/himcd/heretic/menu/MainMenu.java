@@ -1,8 +1,9 @@
 package himcd.heretic.menu;
 
+import himcd.heretic.game.HPlayerInfo;
 import himcd.heretic.util.ItemCreator;
-import himcd.heretic.util.Message;
 import net.kyori.adventure.inventory.Book;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -13,35 +14,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static himcd.heretic.Heretic.Bwins;
-import static himcd.heretic.Heretic.Hwins;
 import static himcd.heretic.TickRunner.prepareTime;
 import static himcd.heretic.game.GameState.State;
 import static himcd.heretic.game.GameState.state;
+import static himcd.heretic.game.HPlayerInfo.player_info;
+import static himcd.heretic.util.Message.*;
 
 public class MainMenu extends SlotMenu {
-    private static final ItemStack info = ItemCreator.create(Material.SKELETON_SKULL).name(Message.msg.deserialize("<red>个人信息")).getItem();
-    private static final ItemStack join = ItemCreator.create(Material.STONE).name(Message.msg.deserialize("<green>准备")).getItem();
-    private static final ItemStack quit = ItemCreator.create(Material.STONE).name(Message.msg.deserialize("<red>取消准备")).getItem();
-    private static final ItemStack docs = ItemCreator.create(Material.BOOK).name(Message.msg.deserialize("<aqua>文档")).getItem();
+    private static final ItemStack join = ItemCreator.create(Material.STONE).name(msg.deserialize("<reset><green>准备")).getItem();
+    private static final ItemStack quit = ItemCreator.create(Material.STONE).name(msg.deserialize("<reset><red>取消准备")).getItem();
+    private static final ItemStack docs = ItemCreator.create(Material.BOOK).name(msg.deserialize("<reset><aqua>文档")).getItem();
     public static List<Player> prepared = new ArrayList<>();
     private boolean isPrepared = false;
 
     public MainMenu(Player player) {
-        super(27, Message.msg.deserialize("<gold><b>主菜单"), player);
-        //个人信息
-        setSlot(0, info
-                , (i, p) -> p.sendMessage(Message.msg.deserialize(
-                        "<rainbow>" + p.getName()
-                                + "\n<gray><bold>-----------------</bold>\n<gold>异教徒获胜场次 %s".formatted(Hwins.getScoreFor(p).getScore())
-                                + "\n<gold>信徒徒获胜场次 %s\n<gray><bold>-----------------".formatted(Bwins.getScoreFor(p).getScore())
-                )));
+        super(27, msg.deserialize("<gold><b>主菜单"), player);
+        //玩家信息
+        HPlayerInfo playerInfo = player_info.get(player);
+        setSlot(10,
+                ItemCreator.create(Material.SKELETON_SKULL)
+                        .name(msg.deserialize("<reset><red>玩家信息"))
+                        .lore(
+                                Component.text("已选角色：%s".formatted(playerInfo.role())),
+                                Component.text("已选技能：%s".formatted(playerInfo.skill()))
+                        )
+                        .getItem(),
+                (i, p) -> p.openInventory(new PlayerInfoMenu(player).getInventory()));
         //准备
         var count = Bukkit.getOnlinePlayers().stream().filter(pl -> pl.getGameMode() == GameMode.ADVENTURE).count();
         if (count == 1) {
-            setSlot(1, ItemCreator.create(Material.BARRIER).name(Message.msg.deserialize("<dark_red>人数不足")).getItem(), (i, p) -> {
-                close = false;
-            });
+            setSlot(13, ItemCreator.create(Material.BARRIER).name(msg.deserialize("<dark_red>人数不足")).getItem(), (i, p) -> close = false);
         } else if (state == State.NONE) {
             isPrepared = prepared.contains(player);
             BiConsumer<ItemStack, Player> f = (i, p) -> {
@@ -62,20 +64,17 @@ public class MainMenu extends SlotMenu {
                 isPrepared = !isPrepared;
                 close = false;
             };
-            setSlot(1, isPrepared ? quit : join, f);
+            setSlot(13, isPrepared ? quit : join, f);
         } else
-            setSlot(1, ItemCreator.create(Material.BARRIER).name(Message.msg.deserialize("<dark_red>游戏已开始")).getItem(), (i, p) -> {
-                close = false;
-            });
-        setSlot(2, docs, (i, p) -> {
+            setSlot(13, ItemCreator.create(Material.BARRIER).name(msg.deserialize("<dark_red>游戏已开始")).getItem(), (i, p) -> close = false);
+        setSlot(16, docs, (i, p) -> {
             p.setGameMode(GameMode.SPECTATOR);
             p.addScoreboardTag("docs");
-            p.openBook(Book.builder().pages(Message.convertMsg(List.of(
+            p.openBook(Book.builder().pages(convertMsg(List.of(
                     "test",
                     "test2"
             ))).build());
             p.teleport(p);
-            close = false;
         });
     }
 }
