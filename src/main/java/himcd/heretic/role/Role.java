@@ -1,10 +1,22 @@
 package himcd.heretic.role;
 
+import himcd.heretic.util.ItemCreator;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-import static himcd.heretic.util.Message.msg;
+import java.util.HashMap;
+import java.util.Map;
+
+import static himcd.heretic.util.Message.rMsg;
 
 public abstract class Role {
+    public final static Map<String, ItemStack> chooseItems = new HashMap<>() {{
+        put("Default", ItemCreator.create(Material.IRON_SWORD).name(rMsg("Default")).hideAttributes().getItem());
+        put("Peter", ItemCreator.create(Material.IRON_SWORD).name(rMsg("Default")).hideAttributes().getItem());
+    }};
+
+
     protected final Player p;
 
     public Role(Player pl) {

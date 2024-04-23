@@ -61,7 +61,7 @@ public final class TickRunner extends BukkitRunnable {
                     });
                 } else {
                     //2阶段
-                    bar_time.progress((36000 - gameTime) / 36000f);
+                    bar_time.progress((36000 - gameTime) / 12000f);
                     bar_time.name(msg.deserialize("<gold>剩余时间：<aqua>%d".formatted((36000 - gameTime) / 20)));
                 }
                 //指向H

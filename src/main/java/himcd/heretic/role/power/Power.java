@@ -29,7 +29,7 @@ public abstract class Power {
             case 3 -> ItemCreator.create(Material.DIAMOND).name(msg.deserialize("test3"));
             default -> ItemCreator.create(Material.AIR);
         };
-        return it.data(i).getItem();
+        return it.data(i).hideAttributes().getItem();
     }
 
     public abstract ItemStack getItem();

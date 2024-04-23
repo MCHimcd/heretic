@@ -28,4 +28,8 @@ public class Message {
             player.setFoodLevel(20);
         }
     }
+
+    public static Component rMsg(String s){
+        return msg.deserialize("<reset>"+s);
+    }
 }

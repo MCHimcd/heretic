@@ -27,6 +27,11 @@ public class ItemCreator {
         return new ItemCreator(type);
     }
 
+    public ItemCreator hideAttributes(){
+        item.editMeta(meta->meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES));
+        return this;
+    }
+
     public ItemStack getItem() {
         return item;
     }
