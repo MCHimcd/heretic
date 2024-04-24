@@ -6,6 +6,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -34,7 +36,7 @@ public class Joker extends Power{
     @Override
     public Consumer<HPlayer> getBuff2() {
         return hPlayer -> {
-
+            addP(PotionEffectType.SPEED,3,0,hPlayer.player());
         };
     }
 }

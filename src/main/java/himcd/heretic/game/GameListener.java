@@ -1,6 +1,7 @@
 package himcd.heretic.game;
 
 import himcd.heretic.role.power.Joker;
+import himcd.heretic.role.power.Power;
 import himcd.heretic.util.ItemCreator;
 import himcd.heretic.util.Message;
 import org.bukkit.*;
@@ -15,7 +16,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -23,7 +26,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
+import org.checkerframework.checker.units.qual.C;
 
+import java.util.Objects;
 import java.util.Random;
 
 import static himcd.heretic.Heretic.*;
@@ -41,7 +46,7 @@ public final class GameListener implements Listener {
             double x = r * Math.sin(rd);
             double z = r * Math.cos(rd);
             a.add(x, 0, z);
-            p.getWorld().spawnParticle(Particle.DUST_COLOR_TRANSITION, a, 4, 0, 0, 0, 0.02, new Particle.DustTransition(Color.RED, Color.BLUE, 1), true);
+            p.getWorld().spawnParticle(Particle.DUST_COLOR_TRANSITION, a, 1, 0, 0, 0, 0.02, new Particle.DustTransition(Color.WHITE, Color.AQUA, .5f), true);
             a.subtract(x, 0, z);
         }
     }
@@ -114,17 +119,18 @@ public final class GameListener implements Listener {
         var id = item.getItemMeta().getCustomModelData();
         switch (id) {
             case 1000000 -> peter1(e, item, user);
-            case 2000000 -> peter2(e, item, user);
+            case 1000001 -> peter2(e, item, user);
             case 2000001 -> joker1(e, item, user);
             case 2000002 -> joker2(e, item, user);
             case 3000000 -> heal(user, item);
+            case 5000000 -> freeze(e,item,user);
         }
     }
 
     private static void heal(Player user, ItemStack item) {
         //治疗
         double health = user.getHealth();
-        double max = user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+        double max = Objects.requireNonNull(user.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue();
         double a = max - health;
         if (a >= 8) {
             item.setAmount(item.getAmount() - 1);
@@ -139,6 +145,66 @@ public final class GameListener implements Listener {
         } else {
             user.sendMessage(Message.msg.deserialize("<gold>[System] 满血不可使用."));
         }
+    }
+    private void freeze(PlayerInteractEvent e,ItemStack item,Player user){
+        //冰冻手雷
+        item.setAmount(item.getAmount() - 1);
+        Vector normalize = user.getLocation().getDirection().normalize();
+        if (user.isSneaking()) {
+            normalize.multiply(1).setY(0.1);
+        } else {
+            normalize.multiply(2);
+        }
+        Location location = user.getLocation().clone().add(0,2,0);
+        Item item1 = (Item) user.getWorld().spawnEntity(location, EntityType.DROPPED_ITEM);
+        item1.setItemStack(new ItemStack(Material.ICE));
+        item(item1, user);
+        item1.setVelocity(normalize);
+        new BukkitRunnable(){
+            Location location1;
+            int t=0;
+            @Override
+            public void run() {
+                t++;
+                item1.customName(msg.deserialize("<aqua> %s".formatted(t)));
+                item1.setCustomNameVisible(true);
+                if (item1.isOnGround()){
+                    location1=item1.getLocation();
+                    item1.remove();
+                    user.getWorld().spawnParticle(Particle.REDSTONE,location1,1000,4,1,4,10,new Particle.DustOptions(Color.WHITE,.5f),true);
+                    location1.getNearbyPlayers(5, player -> !player.equals(user))
+                            .forEach(player -> {
+                                ArmorStand armorStand = (ArmorStand) player.getWorld().spawnEntity(player.getLocation(),EntityType.ARMOR_STAND);
+                                armor_stand(armorStand);
+                                armorStand.setItem(EquipmentSlot.HEAD,ItemCreator.create(Material.ICE).getItem());
+                                new BukkitRunnable(){
+                                    int t=0;
+                                    @Override
+                                    public void run() {
+                                        player.getWorld().spawnParticle(Particle.ITEM_CRACK,player.getLocation().clone().add(0,1,0),5,0.1,0.1,0.1,0.5, new ItemStack(Material.ICE),true);
+                                        if (player.isDead()){
+                                            armorStand.remove();
+                                            cancel();
+                                        }
+                                        t++;
+                                        player.teleport(armorStand);
+                                        if (t%5==0){
+                                            circle(1,player,player.getLocation());
+                                            circle(1,player,player.getLocation().clone().add(0,2,0));
+                                            circle(1,player,player.getLocation().clone().add(0,1,0));
+                                        }
+                                        if (t>=30){
+                                            armorStand.remove();
+                                            cancel();
+                                        }
+                                    }
+                                }.runTaskTimer(plugin,0,1);
+                                player.damage(5, user);
+                            });
+                    cancel();
+                }
+            }
+        }.runTaskTimer(plugin,0,1);
     }
 
     private void peter1(PlayerInteractEvent e, ItemStack item, Player user) {
@@ -168,7 +234,7 @@ public final class GameListener implements Listener {
                     location1.getNearbyPlayers(3, player -> !player.equals(user))
                             .forEach(player -> {
                                 player.setVelocity(AtoB(location1, player.getLocation()).setY(0.5));
-                                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 1, true));
+                                Power.addP(PotionEffectType.SLOW,30,1,player);
                                 player.damage(3, user);
                             });
                     user.getWorld().playSound(location1, Sound.ENTITY_GENERIC_EXPLODE, .5f, 3f);
@@ -230,17 +296,9 @@ public final class GameListener implements Listener {
                     user.getWorld().spawnParticle(Particle.SMOKE_NORMAL, location1, 500, 0.5, 0.5, 0.5, 0.1, null, true);
                     location1.getNearbyPlayers(3, player -> !player.equals(user))
                             .forEach(player -> player.damage(3, user));
-                    popian(location1.clone(), user);
-                    popian(location1.clone(), user);
-                    popian(location1.clone(), user);
-                    popian(location1.clone(), user);
-                    popian(location1.clone(), user);
-                    popian(location1.clone(), user);
-                    popian(location1.clone(), user);
-                    popian(location1.clone(), user);
-                    popian(location1.clone(), user);
-                    popian(location1.clone(), user);
-
+                    for (int count=0;count<=10;count++){
+                        popian(location1.clone(), user);
+                    }
                     user.getWorld().playSound(location1, Sound.ENTITY_GENERIC_EXPLODE, .5f, 3f);
                     item1.remove();
                     cancel();
@@ -281,7 +339,6 @@ public final class GameListener implements Listener {
         entity.setSilent(true);
         entity.setVisible(false);
         entity.setMarker(true);
-        entity.setSmall(true);
         entity.setHeadPose(EulerAngle.ZERO.setY(-90));
     }
 
@@ -295,7 +352,6 @@ public final class GameListener implements Listener {
     public Vector AtoB(Location A, Location B) {
         return B.clone().subtract(A).toVector().normalize();
     }
-
     public void popian(Location l, Player p) {
         Random random = new Random();
         double x = l.getX() + (random.nextDouble() - 0.5) * 20;
@@ -314,6 +370,6 @@ public final class GameListener implements Listener {
                         l.multiply(0);
                     });
         }
-
     }
+
 }

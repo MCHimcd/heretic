@@ -25,9 +25,8 @@ public class Peter extends Role {
                              <gray>右键可以扔出，蹲下右键可以抛出.
                              <gray>一段时间后<red><bold>爆炸</bold></red>，吸引周围敌人，造成<red><bold>伤害</bold></red>和<red><bold>减速</bold></red>效果\
                             """)).data(1000000).getItem(),
-                        ItemCreator.create(Material.CLAY_BALL).name(Message.msg.deserialize("<gold><bold>破片手雷</bold> <red><右键>")).data(2000000).getItem()
+                        ItemCreator.create(Material.CLAY_BALL).name(Message.msg.deserialize("<gold><bold>破片手雷</bold> <red><右键>")).data(1000001).getItem()
                 );
-
     }
 
     @Override
