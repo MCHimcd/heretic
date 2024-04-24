@@ -1,6 +1,7 @@
 package himcd.heretic.role.power;
 
 import himcd.heretic.game.HPlayer;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -14,7 +15,7 @@ public class Brave extends Power{
 
     @Override
     public ItemStack getItem() {
-        return null;
+        return new ItemStack(Material.AIR);
     }
 
     @Override
