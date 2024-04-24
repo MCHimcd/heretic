@@ -119,7 +119,7 @@ public final class GameState {
         players.keySet().forEach(p -> p.teleport(new Location(p.getWorld(), -16, 5, -16)));
         Bukkit.getOnlinePlayers().forEach(p -> {
             p.hideBossBar(bar_time);
-            p.sendMessage(msg.deserialize("<gold>[test]<white>死斗"));
+            p.sendMessage(msg.deserialize("<gold>[System] <white>死斗"));
         });
     }
 

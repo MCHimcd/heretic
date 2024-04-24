@@ -22,16 +22,16 @@ public class Brave extends Power{
     public BiConsumer<HPlayer, List<Player>> getBuff1() {
         return (h,ps)->{
             if (ps.size()>=2){
-                h.player().addPotionEffect(new PotionEffect(PotionEffectType.SPEED,3,0,true,false));
+                addP(PotionEffectType.SPEED,3,0,h.player());
             }
-            h.player().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,3,0,true,false));
+            addP(PotionEffectType.INCREASE_DAMAGE,3,0,h.player());
         };
     }
     @Override
     public Consumer<HPlayer> getBuff2() {
         return h->{
-            h.player().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,3,1,true,false));
-            h.player().addPotionEffect(new PotionEffect(PotionEffectType.SPEED,3,1,true,false));
+            addP(PotionEffectType.INCREASE_DAMAGE,3,1,h.player());
+            addP(PotionEffectType.SPEED,3,1,h.player());
         };
     }
 }

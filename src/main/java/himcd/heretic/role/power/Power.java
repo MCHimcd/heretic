@@ -5,6 +5,8 @@ import himcd.heretic.util.ItemCreator;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -39,4 +41,5 @@ public abstract class Power {
 
     //2阶段被动
     public abstract Consumer<HPlayer> getBuff2();
+    public static void addP(PotionEffectType effectType,int time,int force,Player player){player.addPotionEffect(new PotionEffect(effectType,time,force,true,false));}
 }
