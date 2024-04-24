@@ -6,12 +6,24 @@ import himcd.heretic.util.RoleEquip;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
+
+import static himcd.heretic.Heretic.plugin;
+import static himcd.heretic.game.GameState.State.NONE;
+import static himcd.heretic.game.GameState.state;
 
 public class Peter extends Role {
     public Peter(Player pl) {
         super(pl);
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                if (state==NONE)cancel();
+                pl.sendMessage("1");
+            }
+        }.runTaskTimer(plugin,0,1);
     }
 
     @Override

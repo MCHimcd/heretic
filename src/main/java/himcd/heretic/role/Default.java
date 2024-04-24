@@ -4,9 +4,16 @@ import himcd.heretic.util.ItemCreator;
 import himcd.heretic.util.Message;
 import himcd.heretic.util.RoleEquip;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
+
+import static himcd.heretic.Heretic.plugin;
+import static himcd.heretic.game.GameState.State.NONE;
+import static himcd.heretic.game.GameState.state;
+import static himcd.heretic.util.Message.msg;
 
 public class Default extends Role{
     public Default(Player pl) {
