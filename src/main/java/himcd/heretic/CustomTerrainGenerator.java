@@ -19,8 +19,8 @@ import java.util.Random;
 
 public class CustomTerrainGenerator {
     private static final int OCTAVES = 8;
-    private static final double AMPLITUDE = 1024.0;
-    private static final double ROUGHNESS = 0.5;
+    private static final double AMPLITUDE = 128.0;
+    private static final double ROUGHNESS = 0.3;
     private static final double TREE_CHANCE = 0.01;
     private static final int MIN_TREE_HEIGHT = 4;
     private static final int MAX_TREE_HEIGHT = 8;
@@ -30,7 +30,7 @@ public class CustomTerrainGenerator {
         for (int x = 0; x < 256; x++) {
             for (int z = 0; z < 256; z++) {
                 double heightValue = getHeight(startX + x, startZ + z, world);
-                int height = (int) (heightValue)/4;
+                int height = (int) (heightValue)/2;
                 for (int y = 0; y < height; y++) {
                     world.getBlockAt(startX + x, y, startZ + z).setType(Material.STONE);
                 }
@@ -84,6 +84,8 @@ public class CustomTerrainGenerator {
         return corners + sides + center;
     }
     private static double noise(int x, int z, World world) {
-        return (x * 5432 + z * 9871 != 0) ? world.getSeed() % (x * 5432 + z * 9871) / 65535.0 : 0.0;
+        Random random = new Random();
+        Double nextDouble =new Random().nextDouble(0.5,2);
+        return (x * 123*nextDouble + z * 321*nextDouble != 0) ? world.getSeed() % (x * 123*nextDouble + z * 321*nextDouble) / 5321.0 : 0.0;
     }
 }

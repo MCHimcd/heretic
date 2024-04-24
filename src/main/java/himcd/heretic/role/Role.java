@@ -13,7 +13,8 @@ import static himcd.heretic.util.Message.rMsg;
 public abstract class Role {
     public final static Map<String, ItemStack> chooseItems = new HashMap<>() {{
         put("Default", ItemCreator.create(Material.IRON_SWORD).name(rMsg("Default")).hideAttributes().getItem());
-        put("Peter", ItemCreator.create(Material.IRON_SWORD).name(rMsg("Default")).hideAttributes().getItem());
+        put("Peter", ItemCreator.create(Material.SKELETON_SKULL).name(rMsg("Peter")).hideAttributes().getItem());
+        put("Chloe", ItemCreator.create(Material.LEATHER_BOOTS).name(rMsg("Chloe")).hideAttributes().getItem());
     }};
 
 
@@ -26,7 +27,8 @@ public abstract class Role {
     public static Role of(Player pl, String name) {
         return switch (name) {
             case "Peter" -> new Peter(pl);
-            default -> new Default(pl);
+            case "Chloe" -> new Chloe(pl);
+            default -> new Chloe(pl);
         };
     }
 

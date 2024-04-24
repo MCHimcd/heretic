@@ -4,7 +4,9 @@ import himcd.heretic.util.ItemCreator;
 import himcd.heretic.util.Message;
 import himcd.heretic.util.RoleEquip;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -13,6 +15,7 @@ import java.util.List;
 import static himcd.heretic.Heretic.plugin;
 import static himcd.heretic.game.GameState.State.NONE;
 import static himcd.heretic.game.GameState.state;
+import static himcd.heretic.util.Message.msg;
 
 public class Peter extends Role {
     public Peter(Player pl) {
@@ -21,7 +24,6 @@ public class Peter extends Role {
             @Override
             public void run() {
                 if (state==NONE)cancel();
-                pl.sendMessage("1");
             }
         }.runTaskTimer(plugin,0,1);
     }
@@ -37,7 +39,12 @@ public class Peter extends Role {
                              <gray>右键可以扔出，蹲下右键可以抛出.
                              <gray>一段时间后<red><bold>爆炸</bold></red>，吸引周围敌人，造成<red><bold>伤害</bold></red>和<red><bold>减速</bold></red>效果\
                             """)).data(1000000).getItem(),
-                        ItemCreator.create(Material.CLAY_BALL).name(Message.msg.deserialize("<gold><bold>破片手雷</bold> <red><右键>")).data(1000001).getItem()
+                        ItemCreator.create(Material.CLAY_BALL).name(Message.msg.deserialize("<gold><bold>破片手雷</bold> <red><右键>")).data(1000001).getItem(),
+                        ItemCreator.create(Material.WOODEN_SWORD).name(msg.deserialize("<gold><bold>彼得<reset>之剑"))
+                                .attribute(Attribute.GENERIC_ATTACK_DAMAGE,4, EquipmentSlot.HAND)
+                                .attribute(Attribute.GENERIC_ATTACK_SPEED,1,EquipmentSlot.HAND)
+                                .hideAttributes()
+                                .getItem()
                 );
     }
 

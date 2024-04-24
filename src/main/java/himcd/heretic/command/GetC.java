@@ -2,11 +2,7 @@ package himcd.heretic.command;
 
 import himcd.heretic.CustomTerrainGenerator;
 import himcd.heretic.role.Peter;
-import himcd.heretic.role.Role;
-import io.papermc.paper.math.Rotations;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

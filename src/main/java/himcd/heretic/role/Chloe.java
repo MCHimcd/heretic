@@ -1,17 +1,36 @@
 package himcd.heretic.role;
 
+import himcd.heretic.game.GameListener;
+import himcd.heretic.util.ItemCreator;
+import himcd.heretic.util.RoleEquip;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import static himcd.heretic.Heretic.plugin;
 import static himcd.heretic.game.GameState.State.NONE;
 import static himcd.heretic.game.GameState.state;
+import static himcd.heretic.util.Message.msg;
 
 public class Chloe extends Role {
+    public static void circle(double r, Player p, Location a) {
+        for (double degree = 0; degree < 360; degree++) {
+            double rd = Math.toRadians(degree);
+            double x = r * Math.sin(rd);
+            double z = r * Math.cos(rd);
+            a.add(x, 0, z);
+            p.getWorld().spawnParticle(Particle.CLOUD, a, 1, 0, 0, 0, 0.02, null, true);
+            a.subtract(x, 0, z);
+        }
+    }
     public Chloe(Player pl) {
         super(pl);
-        //二段跳
+        //多段跳
         new BukkitRunnable(){
             int jumpcount=0;
             int jumpcd=0;
@@ -19,13 +38,14 @@ public class Chloe extends Role {
             public void run() {
                 if (state==NONE)cancel();
                 if (!pl.isOnGround()){
+                    pl.getWorld().spawnParticle(Particle.WHITE_SMOKE,pl.getLocation(),3,0,0,0,0);
                     if (pl.isSneaking()){
                         if (jumpcd==0){
                             if (jumpcount>0){
                                 pl.setVelocity(pl.getLocation().getDirection().normalize().multiply(1.3).setY(0.5));
-                                pl.getWorld().spawnParticle(Particle.CLOUD,pl.getLocation(),30,0.3,0,0.3,0);
+                                circle(1,pl,pl.getLocation());
                                 jumpcount--;
-                                jumpcd=10;
+                                jumpcd=5;
                                 pl.setFallDistance(0);
                             }
                         }
@@ -33,7 +53,7 @@ public class Chloe extends Role {
                 }else {
                     if (jumpcount<=1){
                         if (pl.getFoodLevel()>10){
-                            pl.setFoodLevel(pl.getFoodLevel()-2);
+                            pl.setFoodLevel(pl.getFoodLevel()-1);
                             jumpcount++;
                         }
                     }
@@ -46,6 +66,17 @@ public class Chloe extends Role {
 
     @Override
     public void equip() {
-
+        RoleEquip.of(p)
+                .helmet(ItemCreator.create(Material.WITHER_SKELETON_SKULL).name(msg.deserialize("<gold>克洛伊"))
+                        .attribute(Attribute.GENERIC_ARMOR,4,EquipmentSlot.HEAD)
+                        .getItem())
+                .boots(ItemCreator.create(Material.LEATHER_BOOTS).getItem())
+                .chestplate(ItemCreator.create(Material.LEATHER_CHESTPLATE).getItem())
+                .leggings(ItemCreator.create(Material.LEATHER_LEGGINGS).getItem())
+                .items(ItemCreator.create(Material.WOODEN_SWORD).name(msg.deserialize("<gold><bold>克洛伊<reset>圣剑"))
+                        .attribute(Attribute.GENERIC_ATTACK_DAMAGE,7, EquipmentSlot.HAND)
+                        .attribute(Attribute.GENERIC_ATTACK_SPEED,-1.2,EquipmentSlot.HAND)
+                        .hideAttributes()
+                        .getItem());
     }
 }
