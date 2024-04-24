@@ -25,7 +25,7 @@ public class Chloe extends Role {
                                 pl.setVelocity(pl.getLocation().getDirection().normalize().multiply(1.3).setY(0.5));
                                 pl.getWorld().spawnParticle(Particle.CLOUD,pl.getLocation(),30,0.3,0,0.3,0);
                                 jumpcount--;
-                                jumpcd=20;
+                                jumpcd=10;
                                 pl.setFallDistance(0);
                             }
                         }
