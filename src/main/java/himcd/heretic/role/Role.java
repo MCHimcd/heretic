@@ -28,7 +28,7 @@ public abstract class Role {
         return switch (name) {
             case "Peter" -> new Peter(pl);
             case "Chloe" -> new Chloe(pl);
-            default -> new Chloe(pl);
+            default -> new Default(pl);
         };
     }
 

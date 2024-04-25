@@ -77,6 +77,7 @@ public class Chloe extends Role {
                         .attribute(Attribute.GENERIC_ATTACK_DAMAGE,7, EquipmentSlot.HAND)
                         .attribute(Attribute.GENERIC_ATTACK_SPEED,-1.2,EquipmentSlot.HAND)
                         .hideAttributes()
-                        .getItem());
+                        .getItem(),
+                        ItemCreator.create(Material.COOKIE).name(msg.deserialize("<gray> 压缩饼干")).data(101).getItem());
     }
 }

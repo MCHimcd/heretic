@@ -10,12 +10,14 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -50,7 +52,24 @@ public final class GameListener implements Listener {
             a.subtract(x, 0, z);
         }
     }
+    @EventHandler
+    void Eat(PlayerItemConsumeEvent e){
+        if (e.getItem().getItemMeta().hasCustomModelData()){
+            var id = e.getItem().getItemMeta().getCustomModelData();
+            ItemStack item = e.getItem();
+            Player user =e.getPlayer();
+            switch (id){
+                case 101 ->compresscookie(e,item,user);
+                case 102 ->compresscookie(e,item,user);
+            }
+        }
+    }
 
+    private void compresscookie(PlayerItemConsumeEvent e,ItemStack item,Player user){
+        item.setAmount(item.getAmount() - 1);
+        user.setFoodLevel(user.getFoodLevel()+10);
+        Power.addP(PotionEffectType.SLOW,30,0,user);
+    }
     @EventHandler
     void onPlaceBlock(BlockPlaceEvent e) {
         var b = e.getBlockPlaced();
