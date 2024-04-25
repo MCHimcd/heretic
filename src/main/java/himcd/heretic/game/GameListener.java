@@ -45,8 +45,7 @@ import static himcd.heretic.util.Message.rMsg;
 public final class GameListener implements Listener {
     public static HashMap<String,ItemStack> items = new HashMap<>(){{
         put("1",ItemCreator.create(Material.SNOWBALL).name(msg.deserialize("<aqua> 冰冻手雷")).data(5000000).getItem());
-        put("2",ItemCreator.create(Material.GOLD_INGOT).name(rMsg("<gold>治疗")).data(3000000).getItem());
-        put("3",ItemCreator.create(Material.COOKIE).name(msg.deserialize("<gray> 压缩饼干")).data(101).getItem());
+        put("2",ItemCreator.create(Material.COOKIE).name(msg.deserialize("<gray> 压缩饼干")).data(101).getItem());
 
     }};
 
@@ -150,6 +149,7 @@ public final class GameListener implements Listener {
             case 2000001 -> joker1(e, item, user);
             case 2000002 -> joker2(e, item, user);
             case 3000000 -> heal(user, item);
+            case 3000001 -> speed(user,item);
             case 5000000 -> freeze(e,item,user);
         }
     }
@@ -172,6 +172,10 @@ public final class GameListener implements Listener {
         } else {
             user.sendMessage(Message.msg.deserialize("<gold>[System] 满血不可使用."));
         }
+    }
+    private static void speed(Player user,ItemStack item){
+        item.setAmount(item.getAmount()-1);
+        Power.addP(PotionEffectType.SPEED,100,1,user);
     }
     private void freeze(PlayerInteractEvent e,ItemStack item,Player user){
         //冰冻手雷

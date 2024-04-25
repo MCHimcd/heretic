@@ -3,10 +3,7 @@ package himcd.heretic.role;
 import himcd.heretic.game.GameListener;
 import himcd.heretic.util.ItemCreator;
 import himcd.heretic.util.RoleEquip;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -43,6 +40,7 @@ public class Chloe extends Role {
                         if (jumpcd==0){
                             if (jumpcount>0){
                                 pl.setVelocity(pl.getLocation().getDirection().normalize().multiply(1.3).setY(0.5));
+                                pl.playSound(pl, Sound.ENTITY_HORSE_JUMP,0.5f,0.5f);
                                 circle(1,pl,pl.getLocation());
                                 jumpcount--;
                                 jumpcd=5;

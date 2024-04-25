@@ -16,8 +16,6 @@ import static himcd.heretic.util.Message.msg;
 
 public final class GameRunner extends BukkitRunnable {
     public static Location location =null;
-    int supplyx;
-    int supplyz;
     World world = Bukkit.getWorld("world");
     @Override
     public void run() {
