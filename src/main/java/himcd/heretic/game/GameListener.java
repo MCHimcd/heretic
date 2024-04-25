@@ -30,6 +30,8 @@ import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 import org.checkerframework.checker.units.qual.C;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
@@ -37,10 +39,16 @@ import static himcd.heretic.Heretic.*;
 import static himcd.heretic.game.GameState.*;
 import static himcd.heretic.game.HPlayer.heretic;
 import static himcd.heretic.game.HPlayer.tasks;
-import static himcd.heretic.util.Message.h_board;
-import static himcd.heretic.util.Message.msg;
+import static himcd.heretic.util.Message.*;
+import static himcd.heretic.util.Message.rMsg;
 
 public final class GameListener implements Listener {
+    public static HashMap<String,ItemStack> items = new HashMap<>(){{
+        put("1",ItemCreator.create(Material.SNOWBALL).name(msg.deserialize("<aqua> 冰冻手雷")).data(5000000).getItem());
+        put("2",ItemCreator.create(Material.GOLD_INGOT).name(rMsg("<gold>治疗")).data(3000000).getItem());
+        put("3",ItemCreator.create(Material.COOKIE).name(msg.deserialize("<gray> 压缩饼干")).data(101).getItem());
+
+    }};
 
     public static void circle(double r, Player p, Location a) {
         for (double degree = 0; degree < 360; degree++) {

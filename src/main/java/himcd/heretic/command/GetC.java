@@ -13,6 +13,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.jetbrains.annotations.NotNull;
 
+import static himcd.heretic.game.GameRunner.location;
+import static himcd.heretic.game.GameState.*;
+
 import static himcd.heretic.Heretic.plugin;
 
 public class GetC implements CommandExecutor {
@@ -24,10 +27,11 @@ public class GetC implements CommandExecutor {
         }
         String S = args[0];
         if (S.equals("1")) {
-            new Peter(p).equip();
+            supplyTime=3595;
         }
         if (S.equals("2")) {
-            random.generateTerrain(p.getWorld(),new Location(p.getWorld(),0,0,0));
+            p.teleport(location);
+//            random.generateTerrain(p.getWorld(),new Location(p.getWorld(),0,0,0));
 //            CustomTerrainGenerator.generateTerrain(p.getWorld(), 0, 0);
         }
         if (S.equals("3")){

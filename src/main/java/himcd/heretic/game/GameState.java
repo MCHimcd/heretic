@@ -5,6 +5,7 @@ import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Objective;
@@ -27,6 +28,7 @@ public final class GameState {
     private static final GameRunner gr = new GameRunner();
     public static State state = State.NONE;
     public static int gameTime = 0;
+    public static int supplyTime =0;
     public static BukkitTask game_task;
 
     public static void reset() {
@@ -38,6 +40,7 @@ public final class GameState {
             game_task.cancel();
         }
         gameTime = 0;
+        supplyTime = 0;
         prepareTime = -1;
         state = State.NONE;
         players.clear();
