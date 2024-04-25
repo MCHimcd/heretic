@@ -83,7 +83,7 @@ public final class GameState {
         prepared.add(h);
         prepared.forEach(p -> p.addScoreboardTag("spread"));
         var s = Bukkit.getServer();
-        s.dispatchCommand(s.getConsoleSender(), "spreadplayers 128 128 100 128 false @a[tag=spread]");
+        s.dispatchCommand(s.getConsoleSender(), "spreadplayers 0 0 100 128 false @a[tag=spread]");
         prepared.forEach(p -> p.removeScoreboardTag("spread"));
         //变量
         chooseMenu = null;
@@ -91,8 +91,8 @@ public final class GameState {
         state = State.FIRST;
         var r = new Random();
         for (int i = 0; i < 5; i++) {
-            var x = r.nextInt(256);
-            var z = r.nextInt(256);
+            var x = r.nextInt(-128,129);
+            var z = r.nextInt(-128,129);
             portal_frame.add(new Location(h.getWorld(), x, 0, z));
             Objective frame = h_board.getObjective("frame");
             if (frame != null) {
