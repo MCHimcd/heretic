@@ -47,21 +47,26 @@ public final class GameRunner extends BukkitRunnable {
             var z = r.nextInt(-128,128);
             location = new Location(world,x,100,z);
             Bukkit.getServer().getOnlinePlayers().forEach(player -> {
-                player.sendMessage(msg.deserialize("<gold>[System] 空投发放。坐标为:<red><bold> %s , %s".formatted(location.getX(),location.getZ())));
+                player.sendMessage(msg.deserialize("<gold>[System] 空投发放.坐标为:<red><bold> x=%s , z=%s".formatted(location.getX(),location.getZ())));
             });
         }
     }else {
             if (location.getBlock().getType().isAir()){
                 location.add(0,-0.3,0);
                 world.spawnParticle(Particle.REDSTONE,location,20,0.1,0.1,0.1,0.1,new Particle.DustOptions(Color.WHITE,1f),true);
+                world.spawnParticle(Particle.REDSTONE,location,0,-3,0,0,0.5,new Particle.DustOptions(Color.WHITE,.5f),true);
+                world.spawnParticle(Particle.REDSTONE,location,0,-3,0,0,0.5,new Particle.DustOptions(Color.WHITE,.5f),true);
+                world.spawnParticle(Particle.REDSTONE,location,0,0,0,-3,0.5,new Particle.DustOptions(Color.WHITE,.5f),true);
+                world.spawnParticle(Particle.REDSTONE,location,0,0,0,-3,0.5,new Particle.DustOptions(Color.WHITE,.5f),true);
             }else {
                 var r =new Random();
-                world.spawnParticle(Particle.FIREWORKS_SPARK,location,50,0.4,0.4,0.4,0.5,null,true);
-                location.getNearbyPlayers(2, Player::isSneaking)
+                world.spawnParticle(Particle.FIREWORKS_SPARK,location,10,0.1,0.2,0.1,0.05,null,true);
+                world.spawnParticle(Particle.TOTEM,location,10,0.1,0.2,0.1,0.05,null,true);
+                location.getNearbyPlayers(2, Player::isSneaking)//todo 持续1s
                         .forEach(player -> {
                             int i = r.nextInt(0, items.size());
-                            String ia = "%s".formatted(i);
-                            player.getInventory().addItem(items.get(ia));
+                            String iS = "%s".formatted(i);
+                            player.getInventory().addItem(items.get(iS));
                             Bukkit.getServer().getOnlinePlayers().forEach(player1 -> {
                                 player1.sendMessage(msg.deserialize("<gold>[System] 空投已被玩家:%s拾取".formatted(player.getName())));
                             });

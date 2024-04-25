@@ -162,12 +162,12 @@ public final class GameListener implements Listener {
         if (a >= 8) {
             item.setAmount(item.getAmount() - 1);
             user.setHealth(health + 8);
-            user.playSound(user, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0, 1);
+            user.playSound(user, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
             user.spawnParticle(Particle.VILLAGER_HAPPY, user.getLocation().add(0, 1, 0), 100, 0.4, 0.5, 0.4, 0.1);
         } else if (a > 0) {
             item.setAmount(item.getAmount() - 1);
             user.setHealth(health + a);
-            user.playSound(user, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0, 1);
+            user.playSound(user, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
             user.spawnParticle(Particle.VILLAGER_HAPPY, user.getLocation().add(0, 1, 0), 100, 0.4, 0.5, 0.4, 0.1);
         } else {
             user.sendMessage(Message.msg.deserialize("<gold>[System] 满血不可使用."));
@@ -176,6 +176,7 @@ public final class GameListener implements Listener {
     private void freeze(PlayerInteractEvent e,ItemStack item,Player user){
         //冰冻手雷
         item.setAmount(item.getAmount() - 1);
+        user.playSound(user,Sound.BLOCK_GLASS_BREAK,.5f,2f);
         Vector normalize = user.getLocation().getDirection().normalize();
         if (user.isSneaking()) {
             normalize.multiply(1).setY(0.1);
@@ -219,6 +220,7 @@ public final class GameListener implements Listener {
                                             circle(1,player,player.getLocation());
                                             circle(1,player,player.getLocation().clone().add(0,2,0));
                                             circle(1,player,player.getLocation().clone().add(0,1,0));
+                                            user.playSound(user,Sound.BLOCK_GLASS_BREAK,.5f,1f);
                                         }
                                         if (t>=30){
                                             armorStand.remove();
@@ -249,6 +251,7 @@ public final class GameListener implements Listener {
         item1.setItemStack(new ItemStack(Material.IRON_BLOCK));
         item(item1, user);
         item1.setVelocity(normalize);
+        user.playSound(user,Sound.ENTITY_CREEPER_PRIMED,1f,1f);
         new BukkitRunnable() {
             int t = 0;
 
@@ -301,6 +304,7 @@ public final class GameListener implements Listener {
         //破片手雷
         e.setCancelled(true);
         item.setAmount(item.getAmount() - 1);
+        user.playSound(user,Sound.ENTITY_CREEPER_PRIMED,1f,1f);
         Vector normalize = user.getLocation().getDirection().normalize();
         if (user.isSneaking()) {
             normalize.multiply(1).setY(0.5);
@@ -345,11 +349,13 @@ public final class GameListener implements Listener {
         item.setAmount(item.getAmount() - 1);
         user.spawnParticle(Particle.SMOKE_LARGE, user.getLocation(), 100, 0.5, 0.5, 0.5, 0.5);
         user.teleport(Joker.JokerLoc);
+        user.playSound(user,Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f);
     }
 
     private static void joker1(PlayerInteractEvent e, ItemStack item, Player user) {
         //Joker-1
         e.setCancelled(true);
+        user.playSound(user,Sound.UI_BUTTON_CLICK,.5f,2f);
         item.setAmount(item.getAmount() - 1);
         Joker.JokerLoc = user.getLocation();
         Joker.JokerUser = user.getPlayer();
