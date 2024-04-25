@@ -1,6 +1,6 @@
 package himcd.heretic.command;
 
-import himcd.heretic.CustomTerrainGenerator;
+import himcd.heretic.random;
 import himcd.heretic.role.Peter;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -27,7 +27,8 @@ public class GetC implements CommandExecutor {
             new Peter(p).equip();
         }
         if (S.equals("2")) {
-            CustomTerrainGenerator.generateTerrain(p.getWorld(), 0, 0);
+            random.generateTerrain(p.getWorld(),new Location(p.getWorld(),0,0,0));
+//            CustomTerrainGenerator.generateTerrain(p.getWorld(), 0, 0);
         }
         if (S.equals("3")){
             ArmorStand armorStand = (ArmorStand) p.getWorld().spawnEntity(p.getLocation(), EntityType.ARMOR_STAND);
