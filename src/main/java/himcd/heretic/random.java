@@ -6,6 +6,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+import java.util.IllegalFormatFlagsException;
 import java.util.Random;
 
 public class random {
@@ -22,6 +23,7 @@ public class random {
             }
         }
         center.getNearbyLivingEntities(128,livingEntity -> livingEntity.getScoreboardTags().contains("animal")).forEach(Entity::remove);
+        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "kill @e[type=item]");
         // 使用 Simplex 噪声生成平滑的地形
         SimplexNoise simplexNoise = new SimplexNoise(random);
         double noiseScale = 0.0055555555555555555555555555555; // 噪声缩放因子，影响地形的起伏程度
@@ -33,9 +35,11 @@ public class random {
                 int height = center.getBlockY() + (int) (noiseValue * 30); // 调整高度范围
                 // 生成地形
                 for (int y = startY; y <= height; y++) {
+                    if (y==startY){
+                        world.getBlockAt(x, y, z).setType(Material.BEDROCK);
+                    }
                     if (y <= startY+10) {
                         world.getBlockAt(x, y, z).setType(Material.STONE);
-
                     }else {
                         world.getBlockAt(x, y, z).setType(Material.DIRT);
                     }
@@ -53,6 +57,16 @@ public class random {
                     if (height>-10){
                         if (y==height){
                             world.getBlockAt(x, y+1, z).setType(Material.GRASS_BLOCK);
+                            int i = random.nextInt(0, 100);
+                            if (i==1){
+                                world.getBlockAt(x, y+1, z).setType(Material.IRON_ORE);
+                            }
+                            if (i==2){
+                                world.getBlockAt(x, y+1, z).setType(Material.DIAMOND_ORE);
+                            }
+                            if (i==3){
+                                world.getBlockAt(x, y+1, z).setType(Material.GOLD_ORE);
+                            }
                             if (random.nextDouble() < 0.005&& y < world.getMaxHeight() - 1) {
                                 placelandanimal(world, x, y+2, z, random);
                             }}

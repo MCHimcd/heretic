@@ -6,6 +6,7 @@ import himcd.heretic.util.ItemCreator;
 import himcd.heretic.util.Message;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -16,6 +17,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -30,10 +33,7 @@ import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 import org.checkerframework.checker.units.qual.C;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 import static himcd.heretic.Heretic.*;
 import static himcd.heretic.game.GameState.*;
@@ -43,6 +43,13 @@ import static himcd.heretic.util.Message.*;
 import static himcd.heretic.util.Message.rMsg;
 
 public final class GameListener implements Listener {
+    private final Set<Material> tools = new HashSet<>(Arrays.asList(
+            Material.WOODEN_PICKAXE, Material.STONE_PICKAXE, Material.IRON_PICKAXE, Material.GOLDEN_PICKAXE, Material.DIAMOND_PICKAXE, Material.NETHERITE_PICKAXE,
+            Material.WOODEN_AXE, Material.STONE_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.DIAMOND_AXE, Material.NETHERITE_AXE,
+            Material.WOODEN_SHOVEL, Material.STONE_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.DIAMOND_SHOVEL, Material.NETHERITE_SHOVEL,
+            Material.WOODEN_HOE, Material.STONE_HOE, Material.IRON_HOE, Material.GOLDEN_HOE, Material.DIAMOND_HOE, Material.NETHERITE_HOE,
+            Material.WOODEN_SWORD, Material.STONE_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.DIAMOND_SWORD, Material.NETHERITE_SWORD
+    ));
     public static HashMap<String,ItemStack> items = new HashMap<>(){{
         put("1",ItemCreator.create(Material.SNOWBALL).name(msg.deserialize("<aqua> 冰冻手雷")).data(5000000).getItem());
         put("2",ItemCreator.create(Material.COOKIE).name(msg.deserialize("<gray> 压缩饼干")).data(101).getItem());
@@ -71,7 +78,15 @@ public final class GameListener implements Listener {
             }
         }
     }
-
+    @EventHandler
+    void craft(PrepareItemCraftEvent e){
+        ItemStack item = e.getInventory().getResult();
+        if (item!=null){
+            if (tools.contains(item.getType())) {
+                e.getInventory().setResult(ItemCreator.create(item.getType()).attribute(Attribute.GENERIC_ATTACK_DAMAGE,0,EquipmentSlot.HAND).getItem());
+            }
+        }
+    }
     private void compresscookie(PlayerItemConsumeEvent e,ItemStack item,Player user){
         item.setAmount(item.getAmount() - 1);
         user.setFoodLevel(user.getFoodLevel()+10);
@@ -178,6 +193,7 @@ public final class GameListener implements Listener {
         Power.addP(PotionEffectType.SPEED,100,1,user);
     }
     private void freeze(PlayerInteractEvent e,ItemStack item,Player user){
+        e.setCancelled(true);
         //冰冻手雷
         item.setAmount(item.getAmount() - 1);
         user.playSound(user,Sound.BLOCK_GLASS_BREAK,.5f,2f);

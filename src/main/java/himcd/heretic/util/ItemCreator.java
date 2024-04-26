@@ -8,7 +8,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
+import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,6 +40,11 @@ public class ItemCreator {
 
     public ItemCreator name(Component name) {
         item.editMeta(meta -> meta.displayName(name));
+        return this;
+    }
+    public ItemCreator color(Color color){
+        LeatherArmorMeta helmetMeta = (LeatherArmorMeta) item.getItemMeta();
+        helmetMeta.setColor(org.bukkit.Color.fromRGB(color.getRGB()));
         return this;
     }
 

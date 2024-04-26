@@ -7,7 +7,10 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.awt.Color;
 
 import static himcd.heretic.Heretic.plugin;
 import static himcd.heretic.game.GameState.State.NONE;
@@ -68,9 +71,9 @@ public class Chloe extends Role {
                 .helmet(ItemCreator.create(Material.WITHER_SKELETON_SKULL).name(msg.deserialize("<gold>克洛伊"))
                         .attribute(Attribute.GENERIC_ARMOR,4,EquipmentSlot.HEAD)
                         .getItem())
-                .boots(ItemCreator.create(Material.LEATHER_BOOTS).getItem())
-                .chestplate(ItemCreator.create(Material.LEATHER_CHESTPLATE).getItem())
-                .leggings(ItemCreator.create(Material.LEATHER_LEGGINGS).getItem())
+                .boots(ItemCreator.create(Material.LEATHER_BOOTS).color(Color.WHITE).getItem())
+                .chestplate(ItemCreator.create(Material.LEATHER_CHESTPLATE).color(Color.WHITE).getItem())
+                .leggings(ItemCreator.create(Material.LEATHER_LEGGINGS).color(Color.WHITE).getItem())
                 .items(ItemCreator.create(Material.WOODEN_SWORD).name(msg.deserialize("<gold><bold>克洛伊<reset>圣剑"))
                         .attribute(Attribute.GENERIC_ATTACK_DAMAGE,7, EquipmentSlot.HAND)
                         .attribute(Attribute.GENERIC_ATTACK_SPEED,-1.2,EquipmentSlot.HAND)

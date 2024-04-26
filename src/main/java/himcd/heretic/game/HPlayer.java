@@ -71,7 +71,10 @@ public record HPlayer(Player player, Role role, Skill skill, Power power) {
             inv.addItem(power.getItem(),ItemCreator.create(Material.END_PORTAL_FRAME).amount(5).getItem());
         }
         inv.addItem(new ItemStack(Material.BREAD, 6));
-        for (var m : new Material[]{Material.IRON_AXE, Material.IRON_PICKAXE, Material.IRON_SHOVEL}) {
+//        for (var m : new Material[]{Material.IRON_AXE, Material.IRON_PICKAXE, Material.IRON_SHOVEL}) {
+//            inv.addItem(ItemCreator.create(m).attribute(Attribute.GENERIC_ATTACK_DAMAGE,0, EquipmentSlot.HAND).getItem());
+//        }
+        for (var m : new Material[]{Material.IRON_AXE}) {
             inv.addItem(ItemCreator.create(m).attribute(Attribute.GENERIC_ATTACK_DAMAGE,0, EquipmentSlot.HAND).getItem());
         }
     }
