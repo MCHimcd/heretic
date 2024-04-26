@@ -34,25 +34,8 @@ public class GetC implements CommandExecutor {
 //            random.generateTerrain(p.getWorld(),new Location(p.getWorld(),0,0,0));
 //            CustomTerrainGenerator.generateTerrain(p.getWorld(), 0, 0);
         }
-        if (S.equals("3")){
-            ArmorStand armorStand = (ArmorStand) p.getWorld().spawnEntity(p.getLocation(), EntityType.ARMOR_STAND);
-            armor_stand(armorStand);
-            new BukkitRunnable(){
-                int t =0;
-
-                @Override
-                public void run() {
-                    t++;
-                    Location l1 = p.getLocation();
-                    float Yaw = p.getYaw();
-                    Location l2 = armorStand.getLocation();
-                    armorStand.setHeadRotations(armorStand.getHeadRotations().add(1,0,0));
-                    if (t>=200){
-                        armorStand.remove();
-                        cancel();
-                    }
-                }
-            }.runTaskTimer(plugin,0,1);
+        if (S.equals("reset")){
+            random.generateTerrain(p.getWorld(),new Location(p.getWorld(),0,0,0));
         }
 
         return true;

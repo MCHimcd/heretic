@@ -84,6 +84,7 @@ public final class GameState {
         prepared.forEach(p -> p.addScoreboardTag("spread"));
         var s = Bukkit.getServer();
         s.dispatchCommand(s.getConsoleSender(), "spreadplayers 0 0 100 128 false @a[tag=spread]");
+        s.dispatchCommand(s.getConsoleSender(), "kill @e[type=item]");
         prepared.forEach(p -> p.removeScoreboardTag("spread"));
         //变量
         chooseMenu = null;

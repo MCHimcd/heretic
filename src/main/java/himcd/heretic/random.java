@@ -1,9 +1,10 @@
 package himcd.heretic;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.TreeType;
-import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 
 import java.util.Random;
 
@@ -20,6 +21,7 @@ public class random {
                 }
             }
         }
+        center.getNearbyLivingEntities(128,livingEntity -> livingEntity.getScoreboardTags().contains("animal")).forEach(Entity::remove);
         // 使用 Simplex 噪声生成平滑的地形
         SimplexNoise simplexNoise = new SimplexNoise(random);
         double noiseScale = 0.0055555555555555555555555555555; // 噪声缩放因子，影响地形的起伏程度
@@ -33,11 +35,27 @@ public class random {
                 for (int y = startY; y <= height; y++) {
                     if (y <= startY+10) {
                         world.getBlockAt(x, y, z).setType(Material.STONE);
+
                     }else {
                         world.getBlockAt(x, y, z).setType(Material.DIRT);
                     }
+                    if (height<=-10){
+                        int i = random.nextInt(1, 4);
+                        if (y==height){
+                            if(i==2){
+                                world.getBlockAt(x, y+1, z).setType(Material.GRAVEL);
+                            }
+                            if (i==3){
+                                world.getBlockAt(x, y+1, z).setType(Material.SAND);
+                            }
+                        }
+                    }
                     if (height>-10){
-                        if (y==height){world.getBlockAt(x, y+1, z).setType(Material.GRASS_BLOCK);}
+                        if (y==height){
+                            world.getBlockAt(x, y+1, z).setType(Material.GRASS_BLOCK);
+                            if (random.nextDouble() < 0.005&& y < world.getMaxHeight() - 1) {
+                                placelandanimal(world, x, y+2, z, random);
+                            }}
                         if (random.nextDouble() < 0.0003&& height < world.getMaxHeight() - 1) {
                             placeTree(world, x, height + 1, z, random);
                         }
@@ -50,6 +68,9 @@ public class random {
                 for (int y =startY; y <= startY+22; y++) {
                     if (world.getBlockAt(x,y,z).getType().isAir()){
                         world.getBlockAt(x, y, z).setType(Material.WATER);
+                        if (random.nextDouble() < 0.0003) {
+                            placeseaanimal(world, x, y+1, z, random);
+                        }
                     }
                     if (x!=0){
                         if (x%128==0){
@@ -70,6 +91,24 @@ public class random {
         TreeType treeType = treeTypes[random.nextInt(treeTypes.length)];
         int height = 4 + random.nextInt(8 - 4 + 1);
         world.generateTree(world.getBlockAt(x, y, z).getLocation(), treeType);
+    }
+    private static void placelandanimal(World world,int x,int y,int z,Random random){
+        EntityType[] entityTypes = {EntityType.SHEEP,EntityType.COW,EntityType.CHICKEN};
+        EntityType entityType = entityTypes[random.nextInt(entityTypes.length)];
+        for (int c=0;c<2;c++){
+            Entity entity = world.spawnEntity(new Location(world,x,y,z),entityType);
+            entity.setFallDistance(0);
+            entity.addScoreboardTag("animal");
+        }
+    }
+    private static void placeseaanimal(World world,int x,int y,int z,Random random){
+        EntityType[] entityTypes = {EntityType.COD,EntityType.TROPICAL_FISH,EntityType.SALMON,EntityType.PUFFERFISH};
+        EntityType entityType = entityTypes[random.nextInt(entityTypes.length)];
+        for (int c=0;c<5;c++){
+            Entity entity = world.spawnEntity(new Location(world,x,y,z),entityType);
+            entity.setFallDistance(0);
+            entity.addScoreboardTag("animal");
+        }
     }
 
     // Simplex 噪声类
