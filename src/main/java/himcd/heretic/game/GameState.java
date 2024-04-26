@@ -1,12 +1,14 @@
 package himcd.heretic.game;
 
 import himcd.heretic.menu.ChoosePowerMenu;
+import himcd.heretic.role.power.Power;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Objective;
 
@@ -25,13 +27,15 @@ import static himcd.heretic.util.Message.*;
 
 public final class GameState {
     public static final List<Location> portal_frame = new ArrayList<>();
-    private static final GameRunner gr = new GameRunner();
+    public static final GameRunner gr = new GameRunner();
     public static State state = State.NONE;
     public static int gameTime = 0;
     public static int supplyTime =0;
     public static BukkitTask game_task;
 
     public static void reset() {
+        var border= Bukkit.getWorld("world").getWorldBorder();
+        border.setSize(Integer.MAX_VALUE);
         heretic = null;
         believers.clear();
         hereticT.removeEntries(hereticT.getEntries());
@@ -75,6 +79,8 @@ public final class GameState {
             p.setGameMode(GameMode.SURVIVAL);
             p.closeInventory();
         });
+        var border= h.getWorld().getWorldBorder();
+        border.setSize(256);
         //玩家队伍
         heretic = new HPlayer(h, player_info.get(h), power_id);
         believers.addAll(prepared.stream()
@@ -88,7 +94,6 @@ public final class GameState {
         prepared.forEach(p -> p.removeScoreboardTag("spread"));
         //变量
         chooseMenu = null;
-        game_task = gr.runTaskTimer(plugin, 0, 1);
         state = State.FIRST;
         var r = new Random();
         for (int i = 0; i < 5; i++) {

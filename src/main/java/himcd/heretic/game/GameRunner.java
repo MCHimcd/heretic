@@ -1,7 +1,9 @@
 package himcd.heretic.game;
 
+import himcd.heretic.role.power.Power;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Random;
@@ -13,6 +15,7 @@ import static himcd.heretic.game.GameState.*;
 import static himcd.heretic.game.HPlayer.heretic;
 import static himcd.heretic.game.HPlayer.players;
 import static himcd.heretic.util.Message.msg;
+import static himcd.heretic.util.Message.rMsg;
 
 public final class GameRunner extends BukkitRunnable {
     public static Location location =null;
@@ -30,7 +33,10 @@ public final class GameRunner extends BukkitRunnable {
                         .stream().filter(p -> believerT.hasEntity(p)).toList();
                 heretic.power().getBuff1().accept(heretic, ps);
             }
-            case SECOND -> heretic.power().getBuff2().accept(heretic);
+            case SECOND -> {
+                heretic.power().getBuff2().accept(heretic);
+                Bukkit.getOnlinePlayers().forEach(p-> Power.addP(PotionEffectType.GLOWING,Integer.MAX_VALUE,0,p));
+            }
             case ENDING -> players.keySet().forEach(p -> p.damage(0.1));
         }
         //补给道具
@@ -44,8 +50,8 @@ public final class GameRunner extends BukkitRunnable {
             var x = r.nextInt(-128,128);
             var z = r.nextInt(-128,128);
             location = new Location(world,x,100,z);
-            Bukkit.getServer().getOnlinePlayers().forEach(player -> {
-                player.sendMessage(msg.deserialize("<gold>[System] 空投发放.坐标为:<red><bold> x=%s , z=%s".formatted(location.getX(),location.getZ())));
+            Bukkit.getOnlinePlayers().forEach(player -> {
+                player.sendMessage(rMsg("<gold>[System] 空投发放.坐标为:<red><bold> x=%s , z=%s".formatted(location.getX(),location.getZ())));
             });
         }
     }else {

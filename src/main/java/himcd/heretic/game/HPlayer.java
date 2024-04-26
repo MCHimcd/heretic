@@ -8,6 +8,7 @@ import himcd.heretic.util.ItemCreator;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -61,6 +62,7 @@ public record HPlayer(Player player, Role role, Skill skill, Power power) {
         p.removeScoreboardTag("docs");
         HPlayerInfo.player_info.put(p, new HPlayerInfo("Default", "Heal"));
         p.getInventory().addItem(ItemCreator.create(Material.CLOCK).name(msg.deserialize("<gold>主菜单")).getItem());
+        p.teleport(new Location(p.getWorld(),8,-59 ,8));
     }
 
     public void init() {
@@ -71,9 +73,6 @@ public record HPlayer(Player player, Role role, Skill skill, Power power) {
             inv.addItem(power.getItem(),ItemCreator.create(Material.END_PORTAL_FRAME).amount(5).getItem());
         }
         inv.addItem(new ItemStack(Material.BREAD, 6));
-//        for (var m : new Material[]{Material.IRON_AXE, Material.IRON_PICKAXE, Material.IRON_SHOVEL}) {
-//            inv.addItem(ItemCreator.create(m).attribute(Attribute.GENERIC_ATTACK_DAMAGE,0, EquipmentSlot.HAND).getItem());
-//        }
         for (var m : new Material[]{Material.IRON_AXE}) {
             inv.addItem(ItemCreator.create(m).attribute(Attribute.GENERIC_ATTACK_DAMAGE,0, EquipmentSlot.HAND).getItem());
         }

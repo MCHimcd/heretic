@@ -1,6 +1,7 @@
 package himcd.heretic.util;
 
 import net.kyori.adventure.text.Component;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -44,7 +45,7 @@ public class ItemCreator {
     }
     public ItemCreator color(Color color){
         LeatherArmorMeta helmetMeta = (LeatherArmorMeta) item.getItemMeta();
-        helmetMeta.setColor(org.bukkit.Color.fromRGB(color.getRGB()));
+        helmetMeta.setColor(color);
         return this;
     }
 

@@ -6,12 +6,10 @@ import himcd.heretic.util.ItemCreator;
 import himcd.heretic.util.Message;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -23,15 +21,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.*;
 
@@ -40,7 +35,6 @@ import static himcd.heretic.game.GameState.*;
 import static himcd.heretic.game.HPlayer.heretic;
 import static himcd.heretic.game.HPlayer.tasks;
 import static himcd.heretic.util.Message.*;
-import static himcd.heretic.util.Message.rMsg;
 
 public final class GameListener implements Listener {
     private final Set<Material> tools = new HashSet<>(Arrays.asList(
@@ -67,7 +61,7 @@ public final class GameListener implements Listener {
         }
     }
     @EventHandler
-    void Eat(PlayerItemConsumeEvent e){
+    void onEat(PlayerItemConsumeEvent e){
         if (e.getItem().getItemMeta().hasCustomModelData()){
             var id = e.getItem().getItemMeta().getCustomModelData();
             ItemStack item = e.getItem();
@@ -78,8 +72,9 @@ public final class GameListener implements Listener {
             }
         }
     }
+
     @EventHandler
-    void craft(PrepareItemCraftEvent e){
+    void preCraft(PrepareItemCraftEvent e){
         ItemStack item = e.getInventory().getResult();
         if (item!=null){
             if (tools.contains(item.getType())) {
@@ -87,6 +82,14 @@ public final class GameListener implements Listener {
             }
         }
     }
+
+    @EventHandler
+    void onCraft(CraftItemEvent e){
+        if (Arrays.stream(e.getInventory().getContents()).anyMatch(it->it.getItemMeta().hasCustomModelData())) {
+            e.setCancelled(true);
+        }
+    }
+
     private void compresscookie(PlayerItemConsumeEvent e,ItemStack item,Player user){
         item.setAmount(item.getAmount() - 1);
         user.setFoodLevel(user.getFoodLevel()+10);
@@ -141,6 +144,7 @@ public final class GameListener implements Listener {
             }
         } else if (believerT.hasPlayer(hurt)) {
             hurt.setGameMode(GameMode.SPECTATOR);
+            Bukkit.broadcast(rMsg("%s被%s杀死了".formatted(hurt.getName(),heretic.player().getName())));
             //B死光
             believerT.removePlayer(hurt);
             if (believerT.getSize() == 0) {
@@ -370,6 +374,11 @@ public final class GameListener implements Listener {
         user.spawnParticle(Particle.SMOKE_LARGE, user.getLocation(), 100, 0.5, 0.5, 0.5, 0.5);
         user.teleport(Joker.JokerLoc);
         user.playSound(user,Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f);
+        tasks.add(user.getScheduler().runDelayed(
+                plugin,
+                t -> user.getInventory().addItem(ItemCreator.create(Material.SLIME_BALL).name(msg.deserialize("<gray>欺诈宝珠[ <red>存</red> ]")).data(2000001).getItem()),
+                null, 1200
+        ));
     }
 
     private static void joker1(PlayerInteractEvent e, ItemStack item, Player user) {

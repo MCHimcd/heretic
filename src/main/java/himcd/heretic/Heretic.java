@@ -20,6 +20,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -30,8 +31,7 @@ import org.bukkit.scoreboard.*;
 
 import java.util.logging.Logger;
 
-import static himcd.heretic.game.GameState.State;
-import static himcd.heretic.game.GameState.state;
+import static himcd.heretic.game.GameState.*;
 import static himcd.heretic.game.HPlayer.resetPlayer;
 import static himcd.heretic.util.Message.h_board;
 import static himcd.heretic.util.Message.msg;
@@ -89,6 +89,7 @@ public final class Heretic extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(this, this);
         //重置
         GameState.reset();
+        game_task = gr.runTaskTimer(plugin, 0, 1);
     }
 
     @Override
@@ -149,5 +150,10 @@ public final class Heretic extends JavaPlugin implements Listener {
             p.removeScoreboardTag("docs");
             e.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    void onDrop(PlayerDropItemEvent e){
+        e.setCancelled(true);
     }
 }

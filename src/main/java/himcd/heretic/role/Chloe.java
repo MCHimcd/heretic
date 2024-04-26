@@ -10,7 +10,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.awt.Color;
 
 import static himcd.heretic.Heretic.plugin;
 import static himcd.heretic.game.GameState.State.NONE;

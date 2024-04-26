@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -51,10 +52,16 @@ public class MainMenu extends SlotMenu {
                     //已准备
                     prepared.remove(p);
                     getInventory().setItem(1, join);
+                    Bukkit.getOnlinePlayers().forEach(pl->{
+                        pl.playSound(pl, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
+                    });
                 } else {
                     //未准备
                     prepared.add(p);
                     getInventory().setItem(1, quit);
+                    Bukkit.getOnlinePlayers().forEach(pl->{
+                        pl.playSound(pl, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,2);
+                    });
                 }
                 if (prepared.size() == 1)
                     prepareTime = -1;
