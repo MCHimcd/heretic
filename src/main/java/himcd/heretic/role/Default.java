@@ -27,6 +27,6 @@ public class Default extends Role{
                 .chestplate(ItemCreator.create(Material.IRON_CHESTPLATE).getItem())
                 .leggings(ItemCreator.create(Material.IRON_LEGGINGS).getItem())
                 .boots(ItemCreator.create(Material.IRON_BOOTS).getItem())
-                .items(ItemCreator.create(Material.DIAMOND_SWORD).getItem());
+                .items(ItemCreator.create(Material.IRON_SWORD).getItem());
     }
 }

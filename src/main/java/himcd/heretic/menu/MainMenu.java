@@ -79,7 +79,11 @@ public class MainMenu extends SlotMenu {
             p.addScoreboardTag("docs");
             p.openBook(Book.builder().pages(convertMsg(List.of(
                     "test",
-                    "test2"
+                    "test2",
+                    "",
+                    "",
+                    "",
+                    ""
             ))).build());
             p.teleport(p);
         });

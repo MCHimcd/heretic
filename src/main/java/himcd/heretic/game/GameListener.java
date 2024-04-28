@@ -45,7 +45,7 @@ public final class GameListener implements Listener {
             Material.WOODEN_SWORD, Material.STONE_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.DIAMOND_SWORD, Material.NETHERITE_SWORD
     ));
     public static HashMap<String,ItemStack> items = new HashMap<>(){{
-        put("1",ItemCreator.create(Material.SNOWBALL).name(msg.deserialize("<aqua> 冰冻手雷")).data(5000000).getItem());
+        put("1",ItemCreator.create(Material.SNOWBALL).name(msg.deserialize("<aqua> 冰冻摔炮")).data(5000000).getItem());
         put("2",ItemCreator.create(Material.COOKIE).name(msg.deserialize("<gray> 压缩饼干")).data(101).getItem());
 
     }};
