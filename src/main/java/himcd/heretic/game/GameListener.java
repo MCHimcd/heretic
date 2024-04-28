@@ -109,6 +109,8 @@ public final class GameListener implements Listener {
         Objective frame = h_board.getObjective("frame");
         if (frame != null) {
             frame.getScore("%d %d".formatted(l.getBlockX(), l.getBlockZ())).resetScore();
+            Objects.requireNonNull(Bukkit.getWorld("world")).spawnParticle(Particle.SMOKE_LARGE,l,200,1,1,1,0.5,null,true);
+            Objects.requireNonNull(Bukkit.getWorld("world")).spawnParticle(Particle.SMOKE_LARGE,l,200,1,1,1,0.5,null,true);
         }
         if (portal_frame.isEmpty()) {
             intoSecond();

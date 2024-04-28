@@ -52,6 +52,7 @@ public final class TickRunner extends BukkitRunnable {
                     bar_time.progress((24000 - gameTime) / 24000f);
                     bar_time.name(msg.deserialize("<gold>剩余时间：<aqua>%d".formatted((24000 - gameTime) / 20)));
                     portal_frame.forEach(l -> {
+                        heretic.player().spawnParticle(Particle.END_ROD, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 1, 0.5), 0, 0, 10, 0, 1);
                         heretic.player().spawnParticle(Particle.END_ROD, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 1, 0.5), 10, 0, 10, 0, 0);
                         heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0, 0.5, 0, 0, 5);
                         heretic.player().spawnParticle(Particle.TOTEM, l.getWorld().getHighestBlockAt(l).getLocation().clone().add(0.5, 20, 0.5), 0, -0.5, 0, 0, 5);
