@@ -1,10 +1,14 @@
 package himcd.heretic.game;
 
 import himcd.heretic.role.power.Power;
+import himcd.heretic.util.ItemCreator;
 import org.bukkit.*;
-import org.bukkit.entity.Player;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.*;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.EulerAngle;
 
 import java.util.Random;
 
@@ -18,7 +22,16 @@ import static himcd.heretic.util.Message.msg;
 import static himcd.heretic.util.Message.rMsg;
 
 public final class GameRunner extends BukkitRunnable {
+    public void armor_stand(ArmorStand entity) {
+        entity.setCustomNameVisible(false);
+        entity.setSilent(true);
+        entity.setVisible(false);
+        entity.setMarker(true);
+        entity.setHeadPose(EulerAngle.ZERO.setY(-90));
+    }
     public static Location location =null;
+    public static ArmorStand armorStand=null;
+    public static BlockDisplay blockDisplay=null;
     World world = Bukkit.getWorld("world");
     @Override
     public void run() {
@@ -39,6 +52,12 @@ public final class GameRunner extends BukkitRunnable {
             }
             case ENDING -> players.keySet().forEach(p -> p.damage(0.1));
         }
+        if (heretic!=null) {
+            var h = heretic.player();
+            if (!h.hasPotionEffect(PotionEffectType.HEALTH_BOOST)) {
+                Power.addP(PotionEffectType.HEALTH_BOOST, 1000000, 4, h);
+            }
+        }
         //补给道具
         if (location==null){
             if (supplyTime<=3600){
@@ -50,23 +69,26 @@ public final class GameRunner extends BukkitRunnable {
             var x = r.nextInt(-128,128);
             var z = r.nextInt(-128,128);
             location = new Location(world,x,100,z);
+            blockDisplay = (BlockDisplay) world.spawnEntity(location,EntityType.BLOCK_DISPLAY);
+            blockDisplay.setBlock(Material.CHEST.createBlockData());
             Bukkit.getOnlinePlayers().forEach(player -> {
                 player.sendMessage(rMsg("<gold>[System] 空投发放.坐标为:<red><bold> x=%s , z=%s".formatted(location.getX(),location.getZ())));
             });
         }
     }else {
             if (location.getBlock().getType().isAir()){
-                location.add(0,-0.3,0);
-                world.spawnParticle(Particle.REDSTONE,location,20,0.1,0.1,0.1,0.1,new Particle.DustOptions(Color.WHITE,1f),true);
-                world.spawnParticle(Particle.END_ROD,location,0,-3,0,0,2,null,true);
-                world.spawnParticle(Particle.END_ROD,location,0,-3,0,0,2,null,true);
-                world.spawnParticle(Particle.END_ROD,location,0,0,0,-3,2,null,true);
-                world.spawnParticle(Particle.END_ROD,location,0,0,0,-3,2,null,true);
+                location.add(0,-0.2,0);
+                blockDisplay.teleport(location.clone().add(0,0.3,0));
+                world.spawnParticle(Particle.REDSTONE,location.clone().add(0.5,0,0.5),20,0.1,0.1,0.1,0.1,new Particle.DustOptions(Color.WHITE,1f),true);
+                world.spawnParticle(Particle.END_ROD,location.clone().add(0.5,0,0.5),0,1,0,0,1,null,true);
+                world.spawnParticle(Particle.END_ROD,location.clone().add(0.5,0,0.5),0,-1,0,0,1,null,true);
+                world.spawnParticle(Particle.END_ROD,location.clone().add(0.5,0,0.5),0,0,0,1,1,null,true);
+                world.spawnParticle(Particle.END_ROD,location.clone().add(0.5,0,0.5),0,0,0,-1,1,null,true);
             }else {
                 var r =new Random();
-                world.spawnParticle(Particle.FIREWORKS_SPARK,location,10,0.1,0.2,0.1,0.05,null,true);
-                world.spawnParticle(Particle.TOTEM,location,10,0.1,0.2,0.1,0.05,null,true);
-                location.getNearbyPlayers(2, player -> player.getGameMode()!=GameMode.SPECTATOR && player.isSneaking())//todo 持续1s
+                world.spawnParticle(Particle.FIREWORKS_SPARK,location.clone().add(0.5,0,0.5),10,0.1,0.2,0.1,0.05,null,true);
+                world.spawnParticle(Particle.TOTEM,location.clone().add(0.5,0,0.5),10,0.1,0.2,0.1,0.5,null,true);
+                location.clone().add(0.5,0,0.5).getNearbyPlayers(2,player -> player.isSneaking() && player.getGameMode()!=GameMode.SPECTATOR)//todo 持续1s
                         .forEach(player -> {
                             int i = r.nextInt(0, items.size());
                             String iS = "%s".formatted(i);
@@ -74,6 +96,7 @@ public final class GameRunner extends BukkitRunnable {
                             Bukkit.getServer().getOnlinePlayers().forEach(player1 -> {
                                 player1.sendMessage(msg.deserialize("<gold>[System] 空投已被玩家:%s拾取".formatted(player.getName())));
                             });
+                            if (blockDisplay!=null)blockDisplay.remove();
                             location=null;
                         });
             }
