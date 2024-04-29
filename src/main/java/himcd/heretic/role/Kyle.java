@@ -15,26 +15,27 @@ import static himcd.heretic.game.GameState.State.NONE;
 import static himcd.heretic.game.GameState.state;
 import static himcd.heretic.util.Message.msg;
 
-public class Kyle extends Role{
+public class Kyle extends Role {
     public Kyle(Player pl) {
         super(pl);
-        new BukkitRunnable(){
-           int kyleTime=0;
+        new BukkitRunnable() {
+            int kyleTime = 0;
+
             @Override
             public void run() {
-                if (state==NONE)cancel();
-                if (kylelocation!=null){
-                    if (!kylelocation.getNearbyPlayers(10,player -> player!=pl).isEmpty()){
+                if (state == NONE) cancel();
+                if (kylelocation != null) {
+                    if (!kylelocation.getNearbyPlayers(10, player -> player != pl).isEmpty()) {
                         kyleTime++;
-                        if (kyleTime>=100){
-                            kylelocation.getNearbyPlayers(10,player -> player!=pl).forEach(player -> {
+                        if (kyleTime >= 100) {
+                            kylelocation.getNearbyPlayers(10, player -> player != pl).forEach(player -> {
 
                             });
                         }
-                    }else kyleTime=0;
+                    } else kyleTime = 0;
                 }
             }
-        }.runTaskTimer(plugin,0,1);
+        }.runTaskTimer(plugin, 0, 1);
     }
 
     @Override
@@ -44,10 +45,10 @@ public class Kyle extends Role{
                 .chestplate(ItemCreator.create(Material.LEATHER_CHESTPLATE).color(Color.WHITE).getItem())
                 .leggings(ItemCreator.create(Material.LEATHER_LEGGINGS).color(Color.WHITE).getItem())
                 .items(ItemCreator.create(Material.WOODEN_SWORD).name(msg.deserialize("<gold><bold>凯尔<reset>"))
-                                .attribute(Attribute.GENERIC_ATTACK_DAMAGE,7, EquipmentSlot.HAND)
-                                .attribute(Attribute.GENERIC_ATTACK_SPEED,-1.2,EquipmentSlot.HAND)
-                                .hideAttributes()
-                                .getItem());
+                        .attribute(Attribute.GENERIC_ATTACK_DAMAGE, 7, EquipmentSlot.HAND)
+                        .attribute(Attribute.GENERIC_ATTACK_SPEED, -1.2, EquipmentSlot.HAND)
+                        .hideAttributes()
+                        .getItem());
 
     }
 }

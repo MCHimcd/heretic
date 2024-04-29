@@ -153,7 +153,7 @@ public final class Heretic extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    void onDrop(PlayerDropItemEvent e){
+    void onDrop(PlayerDropItemEvent e) {
         e.setCancelled(true);
     }
 }

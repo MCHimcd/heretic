@@ -11,7 +11,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,8 +29,8 @@ public class ItemCreator {
         return new ItemCreator(type);
     }
 
-    public ItemCreator hideAttributes(){
-        item.editMeta(meta->meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES));
+    public ItemCreator hideAttributes() {
+        item.editMeta(meta -> meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES));
         return this;
     }
 
@@ -43,13 +42,14 @@ public class ItemCreator {
         item.editMeta(meta -> meta.displayName(name));
         return this;
     }
-    public ItemCreator color(Color color){
+
+    public ItemCreator color(Color color) {
         LeatherArmorMeta helmetMeta = (LeatherArmorMeta) item.getItemMeta();
         helmetMeta.setColor(color);
         return this;
     }
 
-    public ItemCreator amount(int amount){
+    public ItemCreator amount(int amount) {
         item.setAmount(amount);
         return this;
     }
@@ -70,15 +70,15 @@ public class ItemCreator {
     }
 
     public ItemCreator attribute(Attribute attribute, String name, double amount, AttributeModifier.Operation operation, EquipmentSlot slot) {
-        item.editMeta(meta -> meta.addAttributeModifier(attribute, new AttributeModifier(UUID.randomUUID(),name, amount, operation,slot)));
+        item.editMeta(meta -> meta.addAttributeModifier(attribute, new AttributeModifier(UUID.randomUUID(), name, amount, operation, slot)));
         return this;
     }
 
     public ItemCreator attribute(Attribute attribute, String name, double amount, EquipmentSlot slot) {
-        return attribute(attribute, name, amount, AttributeModifier.Operation.ADD_NUMBER,slot);
+        return attribute(attribute, name, amount, AttributeModifier.Operation.ADD_NUMBER, slot);
     }
 
-    public ItemCreator attribute(Attribute attribute, double amount, EquipmentSlot slot){
-        return attribute(attribute, "generic", amount,slot);
+    public ItemCreator attribute(Attribute attribute, double amount, EquipmentSlot slot) {
+        return attribute(attribute, "generic", amount, slot);
     }
 }

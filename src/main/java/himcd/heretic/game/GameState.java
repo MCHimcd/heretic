@@ -1,14 +1,11 @@
 package himcd.heretic.game;
 
 import himcd.heretic.menu.ChoosePowerMenu;
-import himcd.heretic.role.power.Power;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Objective;
 
@@ -17,7 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static himcd.heretic.Heretic.*;
+import static himcd.heretic.Heretic.believerT;
+import static himcd.heretic.Heretic.hereticT;
 import static himcd.heretic.TickRunner.chooseMenu;
 import static himcd.heretic.TickRunner.prepareTime;
 import static himcd.heretic.game.HPlayer.*;
@@ -30,11 +28,11 @@ public final class GameState {
     public static final GameRunner gr = new GameRunner();
     public static State state = State.NONE;
     public static int gameTime = 0;
-    public static int supplyTime =0;
+    public static int supplyTime = 0;
     public static BukkitTask game_task;
 
     public static void reset() {
-        var border= Bukkit.getWorld("world").getWorldBorder();
+        var border = Bukkit.getWorld("world").getWorldBorder();
         border.setSize(Integer.MAX_VALUE);
         heretic = null;
         believers.clear();
@@ -79,7 +77,7 @@ public final class GameState {
             p.setGameMode(GameMode.SURVIVAL);
             p.closeInventory();
         });
-        var border= h.getWorld().getWorldBorder();
+        var border = h.getWorld().getWorldBorder();
         border.setSize(256);
         //玩家队伍
         heretic = new HPlayer(h, player_info.get(h), power_id);
@@ -97,8 +95,8 @@ public final class GameState {
         state = State.FIRST;
         var r = new Random();
         for (int i = 0; i < 5; i++) {
-            var x = r.nextInt(-128,129);
-            var z = r.nextInt(-128,129);
+            var x = r.nextInt(-128, 129);
+            var z = r.nextInt(-128, 129);
             portal_frame.add(new Location(h.getWorld(), x, 0, z));
             Objective frame = h_board.getObjective("frame");
             if (frame != null) {

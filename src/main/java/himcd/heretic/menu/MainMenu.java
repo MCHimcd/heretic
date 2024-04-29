@@ -19,7 +19,8 @@ import static himcd.heretic.TickRunner.prepareTime;
 import static himcd.heretic.game.GameState.State;
 import static himcd.heretic.game.GameState.state;
 import static himcd.heretic.game.HPlayerInfo.player_info;
-import static himcd.heretic.util.Message.*;
+import static himcd.heretic.util.Message.convertMsg;
+import static himcd.heretic.util.Message.msg;
 
 public class MainMenu extends SlotMenu {
     private static final ItemStack join = ItemCreator.create(Material.STONE).name(msg.deserialize("<reset><green>准备")).getItem();
@@ -52,16 +53,12 @@ public class MainMenu extends SlotMenu {
                     //已准备
                     prepared.remove(p);
                     getInventory().setItem(1, join);
-                    Bukkit.getOnlinePlayers().forEach(pl->{
-                        pl.playSound(pl, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
-                    });
+                    Bukkit.getOnlinePlayers().forEach(pl -> pl.playSound(pl, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1));
                 } else {
                     //未准备
                     prepared.add(p);
                     getInventory().setItem(1, quit);
-                    Bukkit.getOnlinePlayers().forEach(pl->{
-                        pl.playSound(pl, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,2);
-                    });
+                    Bukkit.getOnlinePlayers().forEach(pl -> pl.playSound(pl, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2));
                 }
                 if (prepared.size() == 1)
                     prepareTime = -1;
