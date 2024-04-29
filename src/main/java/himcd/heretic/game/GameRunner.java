@@ -52,6 +52,12 @@ public final class GameRunner extends BukkitRunnable {
             }
             case ENDING -> players.keySet().forEach(p -> p.damage(0.1));
         }
+        if (heretic!=null) {
+            var h = heretic.player();
+            if (!h.hasPotionEffect(PotionEffectType.HEALTH_BOOST)) {
+                Power.addP(PotionEffectType.HEALTH_BOOST, 1000000, 4, h);
+            }
+        }
         //补给道具
         if (location==null){
             if (supplyTime<=3600){

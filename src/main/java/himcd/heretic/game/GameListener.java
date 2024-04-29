@@ -6,10 +6,7 @@ import himcd.heretic.util.ItemCreator;
 import himcd.heretic.util.Message;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -21,6 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockDataMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -155,6 +153,7 @@ public final class GameListener implements Listener {
         }
         e.setCancelled(true);
     }
+    public static Location kylelocation=null;
 
     @EventHandler
     void onUse(PlayerInteractEvent e) {
@@ -167,12 +166,22 @@ public final class GameListener implements Listener {
         switch (id) {
             case 1000000 -> peter1(e, item, user);
             case 1000001 -> peter2(e, item, user);
+            case 1000002 -> kyle(e,item,user);
             case 2000001 -> joker1(e, item, user);
             case 2000002 -> joker2(e, item, user);
             case 3000000 -> heal(user, item);
             case 3000001 -> speed(user,item);
             case 5000000 -> freeze(e,item,user);
         }
+    }
+
+    public static void kyle(PlayerInteractEvent e,ItemStack item,Player user){
+        e.setCancelled(true);
+        item.setAmount(item.getAmount()-1);
+        kylelocation=user.getLocation();
+        kyletower(kylelocation,user);
+    }
+    public static void kyletower(Location location,Player user){
     }
 
     private static void heal(Player user, ItemStack item) {
