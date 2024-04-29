@@ -58,15 +58,15 @@ public final class GameRunner extends BukkitRunnable {
             if (location.getBlock().getType().isAir()){
                 location.add(0,-0.3,0);
                 world.spawnParticle(Particle.REDSTONE,location,20,0.1,0.1,0.1,0.1,new Particle.DustOptions(Color.WHITE,1f),true);
-                world.spawnParticle(Particle.REDSTONE,location,0,-3,0,0,0.5,new Particle.DustOptions(Color.WHITE,.5f),true);
-                world.spawnParticle(Particle.REDSTONE,location,0,-3,0,0,0.5,new Particle.DustOptions(Color.WHITE,.5f),true);
-                world.spawnParticle(Particle.REDSTONE,location,0,0,0,-3,0.5,new Particle.DustOptions(Color.WHITE,.5f),true);
-                world.spawnParticle(Particle.REDSTONE,location,0,0,0,-3,0.5,new Particle.DustOptions(Color.WHITE,.5f),true);
+                world.spawnParticle(Particle.END_ROD,location,0,-3,0,0,2,null,true);
+                world.spawnParticle(Particle.END_ROD,location,0,-3,0,0,2,null,true);
+                world.spawnParticle(Particle.END_ROD,location,0,0,0,-3,2,null,true);
+                world.spawnParticle(Particle.END_ROD,location,0,0,0,-3,2,null,true);
             }else {
                 var r =new Random();
                 world.spawnParticle(Particle.FIREWORKS_SPARK,location,10,0.1,0.2,0.1,0.05,null,true);
                 world.spawnParticle(Particle.TOTEM,location,10,0.1,0.2,0.1,0.05,null,true);
-                location.getNearbyPlayers(2, Player::isSneaking)//todo 持续1s
+                location.getNearbyPlayers(2, player -> player.getGameMode()!=GameMode.SPECTATOR && player.isSneaking())//todo 持续1s
                         .forEach(player -> {
                             int i = r.nextInt(0, items.size());
                             String iS = "%s".formatted(i);

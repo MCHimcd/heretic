@@ -23,7 +23,7 @@ public class Chloe extends Role {
             double x = r * Math.sin(rd);
             double z = r * Math.cos(rd);
             a.add(x, 0, z);
-            p.getWorld().spawnParticle(Particle.CLOUD, a, 1, 0, 0, 0, 0.02, null, true);
+            p.spawnParticle(Particle.CLOUD, a, 1, 0, 0, 0, 0.02, null);
             a.subtract(x, 0, z);
         }
     }
@@ -71,8 +71,8 @@ public class Chloe extends Role {
                         .attribute(Attribute.GENERIC_ARMOR,4,EquipmentSlot.HEAD)
                         .getItem())
                 .boots(ItemCreator.create(Material.LEATHER_BOOTS).color(Color.WHITE).getItem())
-                .chestplate(ItemCreator.create(Material.LEATHER_CHESTPLATE).color(Color.WHITE).getItem())
-                .leggings(ItemCreator.create(Material.LEATHER_LEGGINGS).color(Color.WHITE).getItem())
+                .chestplate(ItemCreator.create(Material.LEATHER_CHESTPLATE).getItem())
+                .leggings(ItemCreator.create(Material.LEATHER_LEGGINGS).getItem())
                 .items(ItemCreator.create(Material.WOODEN_SWORD).name(msg.deserialize("<gold><bold>克洛伊<reset>圣剑"))
                         .attribute(Attribute.GENERIC_ATTACK_DAMAGE,7, EquipmentSlot.HAND)
                         .attribute(Attribute.GENERIC_ATTACK_SPEED,-1.2,EquipmentSlot.HAND)

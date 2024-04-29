@@ -35,12 +35,9 @@ public class random {
                 int height = center.getBlockY() + (int) (noiseValue * 30); // 调整高度范围
                 // 生成地形
                 for (int y = startY; y <= height; y++) {
-                    if (y==startY){
-                        world.getBlockAt(x, y, z).setType(Material.BEDROCK);
-                    }
                     if (y <= startY+10) {
                         world.getBlockAt(x, y, z).setType(Material.STONE);
-                    }else {
+                    } else {
                         world.getBlockAt(x, y, z).setType(Material.DIRT);
                     }
                     if (height<=-10){
@@ -57,14 +54,19 @@ public class random {
                     if (height>-10){
                         if (y==height){
                             world.getBlockAt(x, y+1, z).setType(Material.GRASS_BLOCK);
-                            int i = random.nextInt(0, 100);
-                            if (i==1){
+                            if (random.nextDouble() < 0.005){
+                                world.getBlockAt(x, y+2, z).setType(Material.SHORT_GRASS);
+                            }
+                            if (random.nextDouble() < 0.005){
+                                world.getBlockAt(x, y+2, z).setType(Material.TALL_GRASS);
+                            }
+                            if (random.nextDouble() < 0.003){
                                 world.getBlockAt(x, y+1, z).setType(Material.IRON_ORE);
                             }
-                            if (i==2){
+                            if (random.nextDouble() < 0.0005){
                                 world.getBlockAt(x, y+1, z).setType(Material.DIAMOND_ORE);
                             }
-                            if (i==3){
+                            if (random.nextDouble() < 0.0005){
                                 world.getBlockAt(x, y+1, z).setType(Material.GOLD_ORE);
                             }
                             if (random.nextDouble() < 0.005&& y < world.getMaxHeight() - 1) {
